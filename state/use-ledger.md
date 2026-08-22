@@ -78,6 +78,26 @@ the mechanism, not a locked door.
              invisible to the operator. Six issues had gone out waiting on it.
              Fixed in the spec, and left visible in the example because it is a
              better teaching case than anything invented.
+
+2026-08-22 | PR #1 / constraint 4 | First test of constraint 4 ("nothing
+             requires an API key, server, quota, or account") against a live
+             case: pages.yml runs on GitHub Actions. | INTERPRETED, NOT
+             AMENDED. The constraint governs what an adopter needs, not how
+             this repo is hosted. Actions and Pages publish a copy; the method
+             stays three markdown files and the dashboards still open from
+             file://. The file:// test is what keeps the tick honest — the day
+             a dashboard fetches from anywhere, it becomes a lie. verify.sh
+             already fails the build on external calls and assets.
+
+2026-08-22 | web uploader damage | GitHub's browser uploader silently dropped
+             all seven dot-prefixed paths (.gitignore and the six under
+             .github/) and discarded the exec bit on scripts/verify.sh.
+             | Recovered on this branch: step-01b restored the seven files
+             verbatim from the bundle, step-01c restored mode 100755 as a pure
+             mode change. The 41 already-uploaded files were confirmed
+             byte-identical to the bundle before anything was copied. For the
+             next repo: don't publish via browser upload, or check the dotfile
+             set and file modes immediately after.
 ```
 
 ---
