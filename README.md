@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="docs/banner-image.png"
+       alt="DriftGuard. Project governance for AI-assisted work. Three markdown files. Zero API calls."
+       width="100%">
+</p>
+
 # DriftGuard
 
 Project governance for AI-assisted work in three markdown files, with no need for a CLI, an account, a server, a database, or a single API call.
