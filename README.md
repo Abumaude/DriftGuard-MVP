@@ -2,13 +2,13 @@
 
 Project governance for AI-assisted work in three markdown files, with no need for a CLI, an account, a server, a database, or a single API call.
 
-Your AI forgets what you decided last Tuesday. Worse, it doesn't know that it forgot — so it invents a reason for the choice, you build on the invention, and three weeks later you're deleting the repo. DriftGuard is the boring fix: write the decisions down in a file the AI reads at the start of every session and is never allowed to rewrite.
+Your AI forgets what you decided last Tuesday. Worse, it doesn't know that it forgot - so it invents a reason for the choice, you build on the invention, and three weeks later you're deleting the repo. DriftGuard is the boring fix: write the decisions down in a file the AI reads at the start of every session and is never allowed to rewrite.
 
 That's it. It's markdown in your repo. Any AI can read it — Claude Code, Cursor, a chat window, a local model you run yourself, or a contractor with a text editor.
 
 > **On the name.** DriftGuard is provisional. Three unrelated products already use it, one of which holds the `DriftGuard` GitHub org. A rename is planned and costs one find-and-replace. See [`docs/NAMING.md`](docs/NAMING.md).
 
-> **Status: alpha, published July 2026.** Unproven, free, MIT. Its own front gate is currently **closed** — see [the gate is closed](#the-gate-is-closed), which is either the most convincing thing here or the least, depending on your temperament.
+> **Status: alpha, published July 2026.** Unproven, free, MIT. Its own front gate is currently **closed** - see [the gate is closed](#the-gate-is-closed), which is either the most convincing thing here or the least, depending on your temperament.
 
 Free, MIT, no email capture, no account, no gated download, no upsell, and no analytics in the repo. Before you spend time on it, read [**what it does not do and who should not use it**](HONEST_BOX.md) — including the case where you should use a competitor instead.
 
@@ -18,7 +18,7 @@ Free, MIT, no email capture, no account, no gated download, no upsell, and no an
 
 ## quick start
 
-Start with two sections of one file. Most of the effort is thinking rather than typing, and I've deliberately dropped the "about twenty minutes" estimate this used to carry — nobody outside me has ever done it, so I don't actually know how long it takes you. The number goes back in when somebody times a real first run.
+Start with two sections of one file. Most of the effort is thinking rather than typing, and I've deliberately dropped the "about twenty minutes" estimate this used to carry - nobody outside me has ever done it, so I don't actually know how long it takes you. The number goes back in when somebody times a real first run.
 
 **1. Copy two files into your project.** Take [`templates/ANCHOR_TEMPLATE.md`](templates/ANCHOR_TEMPLATE.md) and [`templates/BUILD_INSTRUCTIONS_TEMPLATE.md`](templates/BUILD_INSTRUCTIONS_TEMPLATE.md), drop them in the folder where your project lives, and rename them `ANCHOR.md` and `BUILD_INSTRUCTIONS.md`.
 
@@ -53,13 +53,13 @@ Read BUILD_INSTRUCTIONS.md and ANCHOR.md Section 1 from the repo.
 Then run Step 0.
 ```
 
-That's the whole install. No package to add, no CLI to learn, no six-path setup, no account.
+That's the whole install. You don't need to add any packages, learn CLI or setup via various paths nor need an account.
 
 ### what you'll actually notice
 
 Not much, on day one. The change shows up in week three, and it looks like this.
 
-**Both exchanges below are constructed illustrations, not transcripts.** I haven't logged a real session in this form, and a made-up example that reads like evidence is precisely the thing this project claims to be against. The failure pattern is real and I've hit it repeatedly; these two specific exchanges never happened.
+**Both exchanges below are constructed illustrations, not transcripts.** I haven't logged a real session in this form, and a made-up example that reads like evidence is precisely the thing this project claims to be against. The failure pattern is annoyingly frustrating and I've hit it repeatedly; these two specific exchanges never happened.
 
 **Before**, three weeks in:
 
