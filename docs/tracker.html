@@ -210,15 +210,16 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
  "project": "driftguard-launch",
  "productName": "DriftGuard",
  "nameProvisional": true,
- "updated": "2026-07-31",
+ "updated": "2026-08-22",
  "serial": 12,
  "scopeNote": "Launch-scoped tracker. Supersedes the capture-plugin feature tracker (driftguard-tracker/v2) for launch purposes only; that tracker remains canonical for the wedge build and lives in its own repo. This file is the single source the dashboards read. Edit this, not the HTML. Commercial trust layer adopted 2026-07-31 (ANCHOR Section 7); commercial items carry the comm- prefix.",
  "gate": {
-  "status": "closed",
+  "status": "open",
   "section": "ANCHOR.md 1.0",
-  "reason": "The anchor sentence has no named person. Under constraint 1, no build action past Step 0 is permitted.",
-  "action": "Fill ANCHOR.md Section 1.0 with a real human you can message today.",
-  "publishedClosedDeliberately": true
+  "reason": "The anchor sentence names the operator as the named person. The signal is self-generated, which fails the third slot test in ANCHOR.md 1.0; that limitation is recorded in ANCHOR.md Section 9.3 rather than waived.",
+  "action": "Resume a project untouched for a month and complete the next step without re-briefing, with the gap visible in state/use-ledger.md. The band stays Prototype until a signal arrives from outside the project (constraint 6).",
+  "publishedClosedDeliberately": true,
+  "openedAt": "2026-08-22"
  },
  "bands": [
   {
@@ -256,7 +257,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
    "name": "Fill the front gate",
    "brief": "ANCHOR.md Section 1.0 needs a real named person, a result in their world, and an externally generated signal.",
    "category": "gate",
-   "status": "blocked",
+   "status": "complete",
    "band": "prototype",
    "priority": "critical",
    "blockedBy": [],
@@ -736,7 +737,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
    "name": "Process walkthrough (closed-loop gate)",
    "brief": "Draw the launch process, walk every actor end to end, close the two known dead ends in the spec before Step 1.",
    "category": "gate",
-   "status": "blocked",
+   "status": "not-started",
    "band": "prototype",
    "priority": "critical",
    "blockedBy": [

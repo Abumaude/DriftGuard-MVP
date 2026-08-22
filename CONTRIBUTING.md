@@ -71,7 +71,7 @@ A variant needs a `README.md` following the same shape, an `ANCHOR.md` for the d
 
 ## code of conduct
 
-Be decent. Disagree with the idea rather than the person. This project argues publicly that a competitor is better for the most common use case and publishes its own front gate as closed, so robust criticism of its claims isn't merely tolerated — it's the point.
+Be decent. Disagree with the idea rather than the person. This project argues publicly that a competitor is better for the most common use case and publishes a front gate that names its own author and says why that's the weak version, so robust criticism of its claims isn't merely tolerated — it's the point.
 
 Bad-faith participation, harassment, or personal attacks get one warning and then a block.
 

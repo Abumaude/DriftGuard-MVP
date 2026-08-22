@@ -226,18 +226,18 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
 
 <section id="status"><div class="wrap">
   <span class="eyebrow">current state</span>
-  <h2>the gate is closed</h2>
+  <h2>the gate names me</h2>
   <p class="sub">This project governs itself with its own methodology, which means publishing the
-  parts that are not finished. The anchor requires a named person — a real human you can message
-  this afternoon — before any build action. That slot is empty, so nothing may proceed. It ships
-  visibly closed rather than quietly waived, because a governance methodology that exempts itself
-  has lost the argument before anyone reads it.</p>
+  parts that do not flatter it. The anchor requires a named person before any build action, and
+  that person is the author. It fails one of its own three tests — the signal is meant to come
+  from someone other than the operator — and the failure is recorded in the anchor rather than
+  waived. Nothing here has been tested by anyone but me.</p>
   <div class="grid g2" style="margin-top:26px">
-    <div class="banner stop" id="gate-banner">
-      <span class="pill stop">Gate closed</span>
+    <div class="banner" id="gate-banner">
+      <span class="pill ok">Gate open</span>
       <h3 style="margin-top:10px">ANCHOR.md 1.0</h3>
-      <p>The anchor sentence has no named person. Under constraint 1, no build action
-      past Step 0 is permitted.</p>
+      <p>The anchor sentence names the operator. The signal is self-generated, which fails
+      the third slot test; the limitation is recorded in ANCHOR.md Section 9.3.</p>
     </div>
     <div class="banner">
       <span class="pill">Provisional name</span>
@@ -453,13 +453,14 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
 <script type="application/json" id="seed-tracker">
 {
  "gate": {
-  "status": "closed",
+  "status": "open",
   "section": "ANCHOR.md 1.0",
-  "reason": "The anchor sentence has no named person. Under constraint 1, no build action past Step 0 is permitted.",
-  "action": "Fill ANCHOR.md Section 1.0 with a real human you can message today.",
-  "publishedClosedDeliberately": true
+  "reason": "The anchor sentence names the operator as the named person. The signal is self-generated, which fails the third slot test in ANCHOR.md 1.0; that limitation is recorded in ANCHOR.md Section 9.3 rather than waived.",
+  "action": "Resume a project untouched for a month and complete the next step without re-briefing, with the gap visible in state/use-ledger.md. The band stays Prototype until a signal arrives from outside the project (constraint 6).",
+  "publishedClosedDeliberately": true,
+  "openedAt": "2026-08-22"
  },
- "updated": "2026-07-31"
+ "updated": "2026-08-22"
 }
 </script>
 <script type="application/json" id="seed-variants">

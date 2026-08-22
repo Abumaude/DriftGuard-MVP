@@ -32,7 +32,7 @@ The point of writing it down is that variant READMEs get produced in separate ch
 
 **8. First person, opinionated, present.** "I'd like this repo to only maintain C and CUDA code." "I may reject the PR because the complexity is not worth it." A visible author is a trust signal; a voiceless README reads as generated, which in 2026 it usually was.
 
-**9. Self-deprecation where it's true.** "I didn't tune them much though." "probably a little too low." Ours: the gate published closed, two comparison rows flagged unverified, the register gap named as the known weak point. Flaw-first reads as honesty and buys the reader's trust for everything after it. It only works when the flaw is real.
+**9. Self-deprecation where it's true.** "I didn't tune them much though." "probably a little too low." Ours: the front gate that names its own author and admits the signal is self-generated, two comparison rows flagged unverified, the register gap named as the known weak point. Flaw-first reads as honesty and buys the reader's trust for everything after it. It only works when the flaw is real.
 
 **10. A `repo` section, late.** What this is for, what gets merged instantly, what gets turned down — with concrete examples of each. Karpathy's is the best contributing guidance in open source because it's specific enough to act on. Placed after the how-to, never before.
 
