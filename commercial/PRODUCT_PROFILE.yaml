@@ -1,0 +1,139 @@
+profile_version: "0.1"
+
+# Filled 2026-07-31 for the master DriftGuard repo.
+# Schema per commercial/PRODUCT_PROFILE template v0.1.
+# Blank fields below are genuinely unknown, not oversights. Constitution §2:
+# where evidence is incomplete, the wording reflects that.
+
+product:
+  product_id: "driftguard"
+  name: "DriftGuard (provisional name — see docs/NAMING.md)"
+  status: "prelaunch"
+  owner: "operator"
+  canonical_repo: "not yet created — the DriftGuard GitHub org is taken"
+
+problem:
+  target_user: >
+    Someone whose project outlives a single AI chat session. First market is the
+    non-technical AI builder: the person who has watched a project tangle and had
+    no way to untangle it. Secondary: solo developers, and anyone handing
+    AI-started work to a second human.
+  job_to_be_done: >
+    Stop re-explaining my own project to my AI every session, and stop it
+    contradicting decisions I already made.
+  current_alternative: >
+    Longer prompts, saved prompt libraries, pasted backgrounders, memory
+    features, starting over. For code specifically: GitHub Spec Kit, which is
+    better than this for a single codebase with a single agent.
+  costly_problem: >
+    Decisions get silently reversed, the AI invents a plausible reason for a
+    choice it no longer remembers, work is built on the invention, and the
+    project is eventually abandoned or restarted.
+  evidence_of_demand:
+    - "Operator's own repeated failure across ~20 projects. n=1, and it is the operator. Weak evidence for a market."
+    - "Meta arXiv:2607.08716 confirms the mechanism (behavioral state decay) exists. Confirms the PROBLEM, not demand for THIS solution."
+    - "Tessl's Spec Kit review names cross-project and multi-session governance as unaddressed. Third-party, and about a gap rather than about buyers."
+    - "NOT YET EVIDENCED: that anyone other than the operator will adopt this. Zero external users. This is the honest state."
+
+offer:
+  category: "repo"
+  promise: >
+    Three markdown files that keep your project's decisions readable by any AI,
+    across sessions, tools and people.
+  mechanism: >
+    An immutable anchor file the AI reads and never rewrites, a routing file that
+    loads only the relevant sections per step, and git as the durable record.
+  primary_outcome: >
+    The AI answers "why is this like this?" from the record instead of inventing
+    an answer.
+  time_to_first_value: >
+    UNMEASURED. Previously stated as twenty minutes; that figure was withdrawn
+    on 2026-07-31 because no one outside the operator has ever completed the
+    task. See EVIDENCE_LEDGER CLAIM-002.
+  price:
+    currency: "GBP"
+    amount: 0
+    billing: "free"
+  free_alternative:
+    exists: true
+    description: >
+      GitHub Spec Kit is free, far more mature, and better for a single codebase
+      with a single agent. A plain text file of your own decisions, pasted into
+      each session, captures a real share of the value at zero adoption cost.
+      Both are named in the README and the Honest Box.
+
+qualification:
+  best_for:
+    - "Projects that run longer than one chat session, especially across weeks."
+    - "Work that moves between tools, or between you and somebody else."
+    - "Non-code projects — research, courses, content pipelines — where spec tools do not reach."
+    - "People who have already been burned by an AI confidently contradicting an earlier decision."
+  not_for:
+    - "One codebase, one agent, one continuous stretch of work. Use Spec Kit."
+    - "Anyone who wants better output from a single session. This governs, it does not improve generation."
+    - "Anyone wanting software to install or a dashboard to log into. There is neither."
+    - "Anyone who will not write things down. The method is writing things down. There is no automation that removes that."
+  prerequisites:
+    - "Willingness to keep decisions in text."
+    - "Git, for the full benefit. The README documents a reduced no-git path."
+    - "An AI tool that reads files, or the willingness to paste."
+  buyer_effort:
+    - "Writing the anchor honestly, which is thinking rather than typing, and is the actual work."
+    - "Loading the relevant sections at the start of a session."
+    - "Appending to the ledger when something fails. Skipped most often; the part that pays off latest."
+
+disclosure:
+  material_limitations:
+    - "Unproven. No user outside the operator has completed a project with it."
+    - "Nothing is enforced. An AI can ignore the anchor and often will unless prompted to read it."
+    - "The templates are written in developer register, which contradicts the stated first market. Named openly in ANCHOR 1.4."
+    - "The name is provisional and will change. Three unrelated products share it."
+    - "Its own front gate is currently closed, so the project has not itself passed the bar it sets."
+    - "Two rows of the competitive comparison table are unsourced and marked as such."
+  unsupported_uses:
+    - "Compliance, audit or regulatory evidence. It is a working record, not an attested one."
+    - "Any claim that the record is tamper-proof. It is a git history; anyone with write access can rewrite it."
+    - "Multi-tool verification where you must trust another tool's logged claims. Parked as the signing-substrate work."
+  dependencies:
+    - "An AI tool capable of reading files from a repo, or a human willing to paste."
+    - "Git and a host, for durability. Neither is supplied."
+  known_failure_modes:
+    - "The anchor is filled in fully at the start, becomes fiction, and is ignored. The template warns against this and people will do it anyway."
+    - "The ledger stops being updated, which is invisible until you need it."
+    - "The gate is filled with a demographic rather than a person, which quietly voids the mechanism."
+    - "The AI is never told to read the files, so nothing happens at all."
+  honest_box_path: "../HONEST_BOX.md"
+
+evidence:
+  evidence_ledger_path: "EVIDENCE_LEDGER.yaml"
+  key_claim_ids:
+    - "CLAIM-001"
+    - "CLAIM-005"
+    - "CLAIM-008"
+
+delivery:
+  access_method: "Public GitHub repository. Clone, fork, or copy two files."
+  onboarding: "README quick start, plus one filled worked example in a non-code domain."
+  support: >
+    GitHub Issues and Discussions, answered by one person with no response-time
+    commitment. Do not depend on this being fast.
+  update_policy: >
+    The anchor grows by section addition and is never edited, so adopters can
+    always see what changed. No versioned release process yet.
+  refund_or_cancellation: "Not applicable. Nothing is charged and nothing is collected."
+
+reputation_role:
+  primary_role: "authority"
+  expected_trust_event: >
+    Someone other than the operator fills in an anchor, uses it across two
+    sessions, and returns with a specific complaint. This is the MVP proof gate
+    in ANCHOR.md 1.0 and it has not happened.
+  next_natural_product: >
+    The capture-plugin wedge, gated behind that same proof. Explicitly not
+    started early.
+
+governance:
+  constitution_path: "COMMERCIAL_CONSTITUTION.md"
+  driftguard_anchor_path: "../ANCHOR.md"
+  last_reviewed: "2026-07-31"
+  review_status: "WORKED EXAMPLE — filled to show the shape, not a ratified record"

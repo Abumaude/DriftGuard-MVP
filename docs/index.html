@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DriftGuard — governance for AI-assisted work</title>
+<meta name="description" content="Keep your project's decisions and memory portable across people, tools, and time. A methodology, not an app: markdown files any AI can read.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ---------------------------------------------------------------------------
+   PLACEHOLDER TOKEN LAYER
+   The design-system selection decision has not been made yet, so these tokens
+   are a deliberate placeholder,
+   isolated here so the selected system can be dropped in by replacing this
+   block alone. No remote fonts, no CDN, no build step: this file must work
+   from a file:// URL and survive any hosting decision.
+--------------------------------------------------------------------------- */
+:root{
+  --ink:#16181d; --ink-2:#3b4049; --ink-3:#6b7280;
+  --paper:#fbfaf8; --surface:#ffffff; --surface-2:#f4f3f0;
+  --line:#e3e1dc; --line-strong:#cfccc5;
+  --accent:#8a5a20; --accent-soft:#f5ead9;
+  --ok:#2f6b46; --ok-soft:#e2efe7;
+  --warn:#8a5a20; --warn-soft:#f7ecd9;
+  --stop:#963c31; --stop-soft:#f6e3df;
+  --idle:#5a6372; --idle-soft:#eceef1;
+  --font-display:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --shadow:0 1px 2px rgba(20,20,20,.04),0 8px 24px rgba(20,20,20,.05);
+  --maxw:1080px;
+}
+html[data-theme="dark"]{
+  --ink:#eceae6; --ink-2:#b9b6b0; --ink-3:#8b8781;
+  --paper:#131417; --surface:#191b1f; --surface-2:#212429;
+  --line:#2c2f35; --line-strong:#3d4148;
+  --accent:#d5a25c; --accent-soft:#2c2418;
+  --ok:#7fc39b; --ok-soft:#1a2b21;
+  --warn:#d5a25c; --warn-soft:#2c2418;
+  --stop:#e08a7c; --stop-soft:#2e1d1a;
+  --idle:#9aa3b0; --idle-soft:#22262c;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+}
+@media (prefers-color-scheme:dark){
+  html[data-theme="auto"]{
+    --ink:#eceae6; --ink-2:#b9b6b0; --ink-3:#8b8781;
+    --paper:#131417; --surface:#191b1f; --surface-2:#212429;
+    --line:#2c2f35; --line-strong:#3d4148;
+    --accent:#d5a25c; --accent-soft:#2c2418;
+    --ok:#7fc39b; --ok-soft:#1a2b21;
+    --warn:#d5a25c; --warn-soft:#2c2418;
+    --stop:#e08a7c; --stop-soft:#2e1d1a;
+    --idle:#9aa3b0; --idle-soft:#22262c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.15;letter-spacing:-.01em;margin:0}
+.eyebrow{font:700 .72rem var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--ink-3)}
+.mono{font-family:var(--font-mono);font-size:.86em}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:58px}
+.brand{font-family:var(--font-display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;
+  margin-right:auto;display:flex;align-items:center;gap:9px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.navlink{font-size:.88rem;color:var(--ink-2);text-decoration:none}
+.navlink:hover{color:var(--ink)}
+.tbtn{font:600 .8rem var(--font-sans);color:var(--ink-2);background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--line-strong);color:var(--ink)}
+@media(max-width:720px){.navlink[data-opt]{display:none}}
+
+/* hero */
+.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3.4rem);margin:14px 0 0;max-width:20ch}
+.lede{font-size:clamp(1.02rem,2.2vw,1.2rem);color:var(--ink-2);max-width:62ch;margin:18px 0 0}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 .92rem var(--font-sans);
+  padding:11px 18px;border-radius:var(--r);border:1px solid var(--line-strong);
+  background:var(--surface);color:var(--ink);text-decoration:none;transition:.15s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.primary:hover{opacity:.88}
+
+/* pills / banners */
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 .68rem var(--font-sans);
+  letter-spacing:.09em;text-transform:uppercase;padding:5px 10px;border-radius:999px;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.stop{background:var(--stop-soft);color:var(--stop);border-color:transparent}
+.banner{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--surface);
+  border-radius:var(--r);padding:18px 20px;margin:0 0 8px}
+.banner.stop{border-left-color:var(--stop)}
+.banner h3{font-size:1.05rem;margin-bottom:6px}
+.banner p{margin:6px 0 0;color:var(--ink-2);font-size:.94rem}
+
+/* sections */
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+section h2{font-size:clamp(1.5rem,3.4vw,2rem);margin:10px 0 0}
+.sub{color:var(--ink-2);margin:12px 0 0;max-width:64ch}
+.grid{display:grid;gap:16px;margin-top:30px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:22px;box-shadow:var(--shadow)}
+.card h3{font-size:1.12rem;margin-bottom:8px;display:flex;align-items:baseline;gap:9px}
+.card p{margin:0;color:var(--ink-2);font-size:.94rem}
+.card .filename{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);
+  background:var(--accent-soft);padding:2px 7px;border-radius:var(--r-sm)}
+
+/* transcript */
+.xcript{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:20px 22px;display:grid;gap:12px}
+.xcript.bad{border-left:3px solid var(--stop)}
+.xcript.good{border-left:3px solid var(--ok)}
+.xcript .lbl{font:700 .68rem var(--font-sans);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3)}
+.xcript .turn{font-family:var(--font-mono);font-size:.84rem;line-height:1.6;margin:0;
+  padding-left:12px;border-left:2px solid var(--line);color:var(--ink-2)}
+.xcript .turn b{color:var(--ink);font-family:var(--font-sans);font-weight:700;font-size:.8rem;
+  letter-spacing:.04em;display:block;margin-bottom:3px}
+.xcript .verdict{font-size:.9rem;color:var(--ink-2);margin:0}
+
+/* table */
+.tablewrap{overflow-x:auto;margin-top:28px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 .7rem var(--font-sans);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+tr.self td{background:var(--accent-soft)}
+tr.self td:first-child{font-weight:700}
+
+/* variants */
+.vgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));margin-top:30px}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;
+  display:flex;flex-direction:column;gap:9px}
+.vcard .vtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.vcard h3{font-size:1.05rem}
+.vcard .governs{font-size:.9rem;color:var(--ink-2);margin:0}
+.vcard .detail{font-size:.86rem;color:var(--ink-3);margin:0}
+.vcard .vfoot{margin-top:auto;padding-top:8px;font-size:.8rem;color:var(--ink-3);
+  border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}
+
+/* steps */
+.steps{counter-reset:s;margin-top:30px;display:grid;gap:14px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:20px 22px 20px 62px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:20px;top:20px;
+  width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--paper);
+  font:700 .8rem var(--font-sans);display:grid;place-items:center}
+.step h3{font-size:1rem;margin-bottom:5px}
+.step p{margin:0;color:var(--ink-2);font-size:.93rem}
+code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
+  padding:2px 6px;border-radius:var(--r-sm);border:1px solid var(--line)}
+
+/* stats */
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:26px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.stat .n{font-family:var(--font-display);font-size:1.9rem;font-weight:600;line-height:1}
+.stat .l{font:700 .66rem var(--font-sans);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:7px}
+.note{font-size:.85rem;color:var(--ink-3);margin-top:16px;max-width:70ch}
+
+/* links list */
+.links{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:28px}
+.linkcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 17px;text-decoration:none;display:block;transition:.15s}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-1px)}
+.linkcard strong{display:block;font-size:.95rem}
+.linkcard span{font-size:.84rem;color:var(--ink-3)}
+
+footer{padding:44px 0 64px;font-size:.87rem;color:var(--ink-3)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><span class="dot"></span><span data-product>DriftGuard</span></span>
+  <a class="navlink" href="#start">Quick start</a>
+  <a class="navlink" href="#what">How it works</a>
+  <a class="navlink" data-opt href="#notice">What changes</a>
+  <a class="navlink" href="#honest">Limitations</a>
+  <a class="navlink" data-opt href="#scope">Scope</a>
+  <a class="navlink" href="#variants">Variants</a>
+  <a class="navlink" href="tracker.html">Tracker</a>
+  <button class="tbtn" id="theme" type="button" aria-label="Toggle colour theme">Theme</button>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="pillrow">
+    <span class="pill warn">Alpha</span>
+    <span class="pill">Published July 2026</span>
+    <span class="pill">MIT</span>
+    <span class="pill">Zero API calls</span>
+  </div>
+  <h1>Project governance in three markdown files.</h1>
+  <p class="lede">No CLI, no account, no server, no database, and not a single API call.
+  Your AI forgets what you decided last Tuesday — worse, it doesn't know that it forgot, so it
+  invents a reason, you build on the invention, and three weeks later you're deleting the repo.
+  <span data-product>DriftGuard</span> is the boring fix: write the decisions down in a file the AI
+  reads at the start of every session and is never allowed to rewrite.</p>
+  <div class="hero-actions">
+    <a class="btn primary" href="https://github.com/Abumaude/DriftGuard-MVP/tree/main/templates">Get the two templates</a>
+    <a class="btn" href="https://github.com/Abumaude/DriftGuard-MVP/tree/main/examples/worked-example">Read a filled example</a>
+    <a class="btn" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/HONEST_BOX.md">What it does not do</a>
+  </div>
+  <p class="note" style="margin-top:20px">Free, MIT, no email capture, no account, no gated
+  download, no upsell, and no analytics on this page or in the repo.</p>
+</div></header>
+
+<section id="status"><div class="wrap">
+  <span class="eyebrow">current state</span>
+  <h2>the gate is closed</h2>
+  <p class="sub">This project governs itself with its own methodology, which means publishing the
+  parts that are not finished. The anchor requires a named person — a real human you can message
+  this afternoon — before any build action. That slot is empty, so nothing may proceed. It ships
+  visibly closed rather than quietly waived, because a governance methodology that exempts itself
+  has lost the argument before anyone reads it.</p>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="banner stop" id="gate-banner">
+      <span class="pill stop">Gate closed</span>
+      <h3 style="margin-top:10px">ANCHOR.md 1.0</h3>
+      <p>The anchor sentence has no named person. Under constraint 1, no build action
+      past Step 0 is permitted.</p>
+    </div>
+    <div class="banner">
+      <span class="pill">Provisional name</span>
+      <h3 style="margin-top:10px">The name will change</h3>
+      <p>At least three unrelated products already use <span data-product>DriftGuard</span>, including one
+      that holds the GitHub organisation. A rename is planned and costs one find-and-replace —
+      nothing here depends on the string. The methodology and file formats are unaffected, and
+      every URL will redirect.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="start"><div class="wrap">
+  <span class="eyebrow">quick start</span>
+  <h2>Start with two sections of one file</h2>
+  <div class="steps">
+    <div class="step"><h3>Copy the two templates</h3>
+      <p>Take <code>ANCHOR_TEMPLATE.md</code> and <code>BUILD_INSTRUCTIONS_TEMPLATE.md</code> from
+      <a href="https://github.com/Abumaude/DriftGuard-MVP/tree/main/templates">templates/</a> into your project's repo, as <code>ANCHOR.md</code> and
+      <code>BUILD_INSTRUCTIONS.md</code>.</p></div>
+    <div class="step"><h3>Fill sections 1.0 and 1.1 — then stop</h3>
+      <p>A named person you could message this afternoon, a change in <em>their</em> world, and a
+      signal somebody other than you generates. Then stop. Filling in the whole document before
+      building anything is the exact failure this prevents.</p></div>
+    <div class="step"><h3>Point any AI at it</h3>
+      <p>Paste: <code>Read BUILD_INSTRUCTIONS.md and ANCHOR.md Section 1 from the repo. Then run Step 0.</code>
+      That is the whole install — no package, no CLI, no account.</p></div>
+  </div>
+</div></section>
+
+<section id="what"><div class="wrap">
+  <span class="eyebrow">how it works</span>
+  <h2>Three files, all plain text, no magic</h2>
+  <p class="sub">Nothing to install. If you can put a file in a folder, you can run this. Every
+  term on this page is in the <a href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/GLOSSARY.md">glossary</a>,
+  one line each, in ordinary words.</p>
+  <div class="grid g3">
+    <div class="card">
+      <h3>The constitution <span class="filename">ANCHOR.md</span></h3>
+      <p>What you are building, who for, and the rules that must never be broken. The AI reads it
+      and never rewrites it. When its output contradicts the anchor, the output is wrong — not the
+      anchor. It grows by <em>adding</em> sections; you never edit or delete one. That is the rule
+      people find strangest and the one doing most of the work.</p>
+    </div>
+    <div class="card">
+      <h3>The sequence <span class="filename">BUILD_INSTRUCTIONS.md</span></h3>
+      <p>Which part of the anchor to load at each step, so you never dump the whole thing in and
+      get it skimmed. Each step names its model, its inputs, how to check the work, and what to save.
+      It ends with a copy-paste prompt for the next session — which sounds trivial and is the reason
+      people keep using it.</p>
+    </div>
+    <div class="card">
+      <h3>The memory <span class="filename">git</span></h3>
+      <p>State lives in the repo, not in a chat window and not on one laptop. It survives a wiped
+      machine, a switched tool, a provider outage, and somebody else picking the work up cold.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="notice"><div class="wrap">
+  <span class="eyebrow">what changes</span>
+  <h2>The same question, three weeks in</h2>
+  <p class="sub">Not much happens on day one. The difference shows up in week three, and it looks
+  like this.</p>
+  <div class="banner" style="margin:20px 0 0"><span class="pill">Constructed example</span>
+  <p style="margin-top:9px"><strong>Both exchanges below are illustrations, not transcripts.</strong>
+  No real session was logged in this form. The failure pattern is real and well documented; these two
+  specific exchanges never happened. A made-up example that reads like evidence is exactly what this
+  project claims to be against, so it is labelled rather than left to inference.</p></div>
+  <div class="grid g2" style="margin-top:28px">
+    <div class="xcript bad">
+      <span class="lbl">Without an anchor</span>
+      <p class="turn"><b>You</b>why does the auth flow block requests from the same IP twice in a row?</p>
+      <p class="turn"><b>AI</b>That&rsquo;s a standard rate-limiting pattern to prevent brute-force
+      attacks. It&rsquo;s good practice to keep it.</p>
+      <p class="verdict">Confident, plausible, entirely invented. The real reason was a payment
+      sandbox limit you hit in week one and worked around. Four days later you remove the
+      &ldquo;rate limiting&rdquo;, payments break, the rollback undoes something else, and
+      you&rsquo;re managing the codebase instead of building it.</p>
+    </div>
+    <div class="xcript good">
+      <span class="lbl">With an anchor</span>
+      <p class="turn"><b>You</b>why does the auth flow block requests from the same IP twice in a row?</p>
+      <p class="turn"><b>AI</b>ANCHOR.md Section 4 records this: the payment sandbox rejects
+      duplicate calls within 2s from one IP (logged 2026-06-14, see state/use-ledger.md). The block
+      is a workaround for that, not rate limiting. Removing it will break checkout in the sandbox.</p>
+      <p class="verdict">Same model, same question. The difference is that the answer had somewhere
+      to come from.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="honest"><div class="wrap">
+  <span class="eyebrow">before you adopt</span>
+  <h2>What this does not do</h2>
+  <p class="sub">It is free and asks for nothing, so there is no purchase to protect you from — but
+  adopting a working method costs time, and switching away later costs more. The short version is
+  here; the <a href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/HONEST_BOX.md">full disclosure</a> lists the limitations
+  a fair competitor would attack.</p>
+  <div class="grid g2" style="margin-top:28px">
+    <div class="card">
+      <h3>Do not adopt this if</h3>
+      <p><strong>You are building one codebase with one agent.</strong> Use
+      <a href="https://github.com/github/spec-kit">Spec Kit</a> — more mature, far larger community,
+      better at that job. It is also the most common case, so this is not a courtesy.<br><br>
+      <strong>You want better output within a session.</strong> This governs what the AI may do; it
+      does nothing to improve what it generates.<br><br>
+      <strong>You want something to install, or a dashboard to log into.</strong> There is neither,
+      and there will not be.<br><br>
+      <strong>You will not write things down.</strong> The method is writing things down. No
+      automation removes that.</p>
+    </div>
+    <div class="card">
+      <h3>Known limitations</h3>
+      <p><strong>Unproven.</strong> Nobody outside the author has completed a project with it. Not
+      one person. The evidence supports the <em>problem</em> being real; it supports nothing about
+      this being the right answer.<br><br>
+      <strong>Nothing is enforced.</strong> An AI can ignore the anchor, and will, unless prompted to
+      read it. No runtime, no hook, no interception.<br><br>
+      <strong>Not an attested record.</strong> It is a git history — anyone with write access can
+      rewrite it. Not fit for compliance or audit evidence.<br><br>
+      <strong>The templates are written for developers</strong>, which contradicts the stated first
+      market. Named openly as the known weak point, and not yet fixed.</p>
+    </div>
+  </div>
+  <p class="note"><strong>Conflict of interest.</strong> Every claim and verification date on this
+  site comes from the author working with an AI assistant in one session. That is internal review —
+  not an audit, not independent, not attested by anyone outside this project. Each claim is logged
+  with its evidence tier and limits in
+  <a href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/commercial/EVIDENCE_LEDGER.yaml">the evidence ledger</a>,
+  including three currently marked <strong>quarantined</strong>, meaning unsourced and not fit to
+  state as fact.</p>
+</div></section>
+
+<section id="scope"><div class="wrap">
+  <span class="eyebrow">positioning</span>
+  <h2>One word, five scopes</h2>
+  <p class="sub">Everyone is now using drift language, and they all mean something different by it.
+  Each of the first four is bounded by a boundary this project is defined by crossing. If you are
+  building one codebase with one agent, use <a href="https://github.com/github/spec-kit">Spec Kit</a>
+  — it is better at that, and it composes with this.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Who</th><th>Their word</th><th>Their scope</th></tr></thead>
+    <tbody>
+      <tr><td>Anthropic</td><td class="mono">goal drift</td><td>An agent losing the plot within one long task</td></tr>
+      <tr><td>Meta (Wu et al.)</td><td class="mono">behavioral state decay</td><td>Requirements still in context but no longer shaping action, within one session</td></tr>
+      <tr><td>shadcn <span class="mono">improve</span></td><td class="mono">what drifted</td><td>Plan items going stale within one repo, between sessions</td></tr>
+      <tr><td>GitHub Spec Kit</td><td class="mono">/speckit.converge</td><td>Codebase diverging from spec, within one repo</td></tr>
+      <tr class="self"><td data-product>DriftGuard</td><td class="mono">drift</td><td>Decisions not surviving across repos, sessions, tools, operators, and non-code domains</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Three of these five rows were verified on 2026-07-31; the Anthropic and shadcn
+  rows were carried over from an earlier draft and are marked <strong>unverified</strong> in the
+  <a href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/RESEARCH_LOG.md">research log</a> until their primary sources are
+  cited. Three other claims were retired outright in that scan, including one this project had been
+  asserting since May. Recording the gap rather than quietly closing it is the same discipline the
+  page is arguing for.</p>
+</div></section>
+
+<section id="evidence"><div class="wrap">
+  <span class="eyebrow">evidence</span>
+  <h2>Bigger context windows do not fix this</h2>
+  <p class="sub">"Context windows are huge now, this is solved" is a testable claim, and two
+  frontier labs have tested it.</p>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="n">37.6&thinsp;&rarr;&thinsp;45.9<span style="font-size:1rem">%</span></div><div class="l">Terminal-Bench 2.0 pass@1</div></div>
+    <div class="stat"><div class="n">+6.8<span style="font-size:1rem">pp</span></div><div class="l">&tau;&sup2;-Bench</div></div>
+    <div class="stat"><div class="n">+2.4<span style="font-size:1rem">pp</span></div><div class="l">With a stronger agent</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">API calls required</div></div>
+  </div>
+  <p class="note">Meta's <em>Remember When It Matters: Proactive Memory Agent for Long-Horizon
+  Agents</em> (<a href="https://arxiv.org/abs/2607.08716">arXiv:2607.08716</a>) names the failure
+  <strong>behavioral state decay</strong>: the requirements are still sitting in the context window
+  and have simply stopped shaping the next action. Present, but inert. The third figure is the one
+  that matters — a <em>better</em> model still decayed and still gained from an external memory
+  intervention, so capacity is not the constraint and neither is model quality. What is left is
+  knowing when something matters. Figures are quoted from the paper, not from summaries of it.</p>
+</div></section>
+
+<section id="variants"><div class="wrap">
+  <span class="eyebrow">the library</span>
+  <h2>Variants</h2>
+  <p class="sub">A variant is the same methodology with an anchor shaped for a specific domain.
+  Entries marked <em>not yet published</em> exist as complete anchor-and-build pairs but do not
+  have live repositories — a link to nothing costs more credibility than a missing row.</p>
+  <div class="vgrid" id="variants-grid"><p class="muted">Loading…</p></div>
+</div></section>
+
+<section id="more"><div class="wrap">
+  <span class="eyebrow">depth</span>
+  <h2>If you want to go further</h2>
+  <div class="links">
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/HONEST_BOX.md"><strong>Honest box</strong><span>What it does not do, who should not use it, and every known limitation</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/commercial/EVIDENCE_LEDGER.yaml"><strong>Evidence ledger</strong><span>Every public claim, its tier, its sources and its limits</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/commercial/CHECKLIST_RUN_2026-07-31.md"><strong>Governance run</strong><span>The pre-ship checklist, including the three things it failed</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/GLOSSARY.md"><strong>Glossary</strong><span>Every term on this page in plain English, one line each</span></a>
+    <a class="linkcard" href="tracker.html"><strong>Build tracker</strong><span>Every item, its band, and what blocks it</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/RESEARCH_LOG.md"><strong>Research log</strong><span>Sector observations with verification dates, including retired claims</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/POSITIONING.md"><strong>Positioning</strong><span>The competitive delta and eight rehearsed objections</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/NAMING.md"><strong>Naming</strong><span>Three collisions, the criteria, and the rename procedure</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/FAQ.md"><strong>FAQ</strong><span>The questions this actually gets</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/LAUNCH_CHECKLIST.md"><strong>Launch checklist</strong><span>The operational sequence</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/ANCHOR.md"><strong>This project's own anchor</strong><span>The methodology applied to itself, gate and all</span></a>
+    <a class="linkcard" href="https://github.com/Abumaude/DriftGuard-MVP/tree/main/examples/worked-example"><strong>Worked example</strong><span>A filled anchor for a newsletter — deliberately not code</span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>MIT licensed · Alpha · No server, no account, no telemetry</span>
+  <span id="freshness" class="mono">—</span>
+</div></footer>
+
+<script type="application/json" id="seed-tracker">
+{
+ "gate": {
+  "status": "closed",
+  "section": "ANCHOR.md 1.0",
+  "reason": "The anchor sentence has no named person. Under constraint 1, no build action past Step 0 is permitted.",
+  "action": "Fill ANCHOR.md Section 1.0 with a real human you can message today.",
+  "publishedClosedDeliberately": true
+ },
+ "updated": "2026-07-31"
+}
+</script>
+<script type="application/json" id="seed-variants">
+{
+ "variants": [
+  {
+   "slug": "research",
+   "name": "Research",
+   "governs": "Research projects — sources, claims, and synthesis",
+   "audience": "Researchers, analysts, and anyone whose output rests on a chain of sources",
+   "domain": "non-code",
+   "state": "complete",
+   "published": false,
+   "repo": null,
+   "detail": "Dual mode. The researcher mode governs one person's programme; the supervisor mode governs several people's work against one standard, which is the case no per-repo spec tool addresses."
+  },
+  {
+   "slug": "contractor-handoff",
+   "name": "Contractor Handoff",
+   "governs": "Handing an AI-started build to a human who was not there",
+   "audience": "Anyone who has started something with an agent and needs a person to finish it",
+   "domain": "code",
+   "state": "complete",
+   "published": false,
+   "repo": null,
+   "detail": "The clearest case for governance that outlives one operator. The contractor reads the anchor instead of being briefed, and the decisions they inherit come with their reasons attached."
+  },
+  {
+   "slug": "shortform-video",
+   "name": "Short-Form Video Channel",
+   "governs": "A video channel as a governed production pipeline",
+   "audience": "Creators running a recurring content operation",
+   "domain": "non-code",
+   "state": "complete",
+   "published": false,
+   "repo": null,
+   "detail": "A meta-build for channel setup plus a recurring per-video sequence. Evidence for the claim that this works outside software."
+  },
+  {
+   "slug": "courseware",
+   "name": "Courseware",
+   "governs": "Course and curriculum builds",
+   "audience": "Anyone building teaching material that outlives one draft",
+   "domain": "non-code",
+   "state": "in-progress",
+   "published": false,
+   "repo": null,
+   "detail": "Roughly 80%. Not published until complete."
+  },
+  {
+   "slug": "atlas",
+   "name": "Atlas",
+   "governs": "Operator infrastructure — a portfolio catalogue across many repos",
+   "audience": "Operators running eight or more governed projects",
+   "domain": "meta",
+   "state": "complete",
+   "published": false,
+   "repo": null,
+   "detail": "Not a starting point. Useful once you have enough governed projects that finding the right one is itself a problem."
+  },
+  {
+   "slug": "suzerain",
+   "name": "Suzerain",
+   "governs": "Operator infrastructure — cross-repo and lineage governance",
+   "audience": "Operators whose projects inherit from one another",
+   "domain": "meta",
+   "state": "complete",
+   "published": false,
+   "repo": null,
+   "detail": "Not a starting point. Handles the case where one project's decisions must bind its descendants."
+  },
+  {
+   "slug": "capture-plugin",
+   "name": "Capture Plugin",
+   "governs": "Capturing decision-dense exchanges from any AI chat into a governed repo",
+   "audience": "Anyone whose decisions currently die in chat history",
+   "domain": "code",
+   "state": "planned",
+   "published": false,
+   "repo": null,
+   "detail": "The wedge. Gated behind the MVP proof gate — it is not started early, on purpose, because starting it early is exactly the failure this project was built to correct."
+  }
+ ]
+}
+</script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* Every rendered occurrence of the product name comes from this constant.
+     The <title> and <meta description> in <head> also contain it as static text
+     (both are overwritten below on load) — a rename's find-and-replace catches
+     those the same way it catches the markdown. See docs/NAMING.md. */
+  var PRODUCT = 'DriftGuard';
+
+  /* ---- theme (in-memory only; no browser storage) ---- */
+  var root = document.documentElement, order = ['auto','light','dark'];
+  document.getElementById('theme').addEventListener('click', function(){
+    var i = order.indexOf(root.getAttribute('data-theme'));
+    var next = order[(i + 1) % order.length];
+    root.setAttribute('data-theme', next);
+    this.textContent = next === 'auto' ? 'Theme' : (next[0].toUpperCase() + next.slice(1));
+  });
+
+  /* ---- name injection ---- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-product]'), function(el){
+    el.textContent = PRODUCT;
+  });
+  document.title = PRODUCT + ' — governance for AI-assisted work';
+
+  /* ---- data loading: embedded seed first, network refresh if available ----
+     fetch() of a sibling file fails under file:// in most browsers, so the seed
+     is authoritative offline and the fetch is a best-effort refresh. */
+  function seed(id){
+    try { return JSON.parse(document.getElementById(id).textContent); }
+    catch (e) { return null; }
+  }
+  function refresh(url, cb){
+    if (!window.fetch || location.protocol === 'file:') return;
+    fetch(url, {cache:'no-cache'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d) cb(d); })
+      .catch(function(){ /* offline or blocked — seed already rendered */ });
+  }
+
+  /* ---- gate banner ---- */
+  function renderGate(d){
+    /* No early return on missing data: the static markup above is the fallback,
+       not a spinner, so a failed load leaves a correct panel rather than a
+       permanent "loading" state. */
+    var g = d && d.gate; if (!g) return;
+    var box = document.getElementById('gate-banner');
+    var closed = g.status === 'closed';
+    box.className = 'banner' + (closed ? ' stop' : '');
+    box.innerHTML =
+      '<span class="pill ' + (closed ? 'stop' : 'ok') + '">Gate ' + esc(g.status) + '</span>' +
+      '<h3 style="margin-top:10px">' + esc(g.section || '') + '</h3>' +
+      '<p>' + esc(g.reason || '') + '</p>' +
+      (g.action ? '<p><strong>Next action:</strong> ' + esc(g.action) + '</p>' : '');
+    if (d.updated) {
+      document.getElementById('freshness').textContent = 'data as of ' + d.updated;
+    }
+  }
+
+  /* ---- variants ---- */
+  var STATE_LABEL = {complete:'Complete', 'in-progress':'In progress', planned:'Planned'};
+  var STATE_CLASS = {complete:'ok', 'in-progress':'warn', planned:''};
+
+  function renderVariants(d){
+    var list = (d && d.variants) || [];
+    var grid = document.getElementById('variants-grid');
+    if (!list.length){ grid.innerHTML = '<p class="muted">No variants listed.</p>'; return; }
+    grid.innerHTML = list.map(function(v){
+      var live = v.published && v.repo;
+      return '<article class="vcard">' +
+        '<div class="vtop"><h3>' + esc(v.name) + '</h3>' +
+        '<span class="pill ' + (STATE_CLASS[v.state] || '') + '">' +
+          esc(STATE_LABEL[v.state] || v.state) + '</span></div>' +
+        '<p class="governs">' + esc(v.governs) + '</p>' +
+        (v.detail ? '<p class="detail">' + esc(v.detail) + '</p>' : '') +
+        '<div class="vfoot"><span class="mono">' + esc(v.domain) + '</span>' +
+        (live ? '<a href="' + esc(v.repo) + '">Open repository &rarr;</a>'
+              : '<span>not yet published</span>') +
+        '</div></article>';
+    }).join('');
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  renderGate(seed('seed-tracker'));
+  renderVariants(seed('seed-variants'));
+  refresh('data/tracker.json', renderGate);
+  refresh('data/variants.json', renderVariants);
+})();
+</script>
+</body>
+</html>

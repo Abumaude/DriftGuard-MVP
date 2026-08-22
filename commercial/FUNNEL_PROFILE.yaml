@@ -1,0 +1,150 @@
+funnel_version: "0.1"
+
+# Filled 2026-07-31. Schema per commercial/FUNNEL_PROFILE template v0.1.
+#
+# The layer's adoption sequence says to create this only when a product is
+# genuinely being sold or distributed. Nothing here is sold, but it is about to
+# be distributed publicly, and the attention → advocacy path is real even at a
+# price of zero. So it exists, at draft status, with the empty stages left
+# visibly empty rather than filled with plausible-sounding intentions.
+#
+# Constitution §7 applies throughout: this is free value with no email capture,
+# no gated download, and no upsell. There is no commercial exchange attached,
+# and if one is ever added it will be stated plainly rather than introduced quietly.
+
+product_id: "driftguard"
+funnel_status: "draft"
+
+principle:
+  objective: >
+    Move an appropriate adopter from problem recognition to a useful outcome
+    without violating the commercial constitution. "Appropriate" is doing real
+    work here — sending the wrong person away is a success, not a leak.
+  conversion_is_not_endpoint: true
+  note_on_conversion: >
+    There is no purchase. The conversion event is somebody filling in an anchor
+    for their own project. The outcome event is them coming back with a specific
+    complaint about it, which is the MVP proof gate.
+
+stages:
+  - stage: "attention"
+    buyer_question: "Why should I notice this?"
+    asset_types: ["master README", "public dashboard", "long-form origin post (not written)"]
+    required_truth: >
+      The opening line — three markdown files, no CLI, account, server, database
+      or API call — is literally checkable by opening the repo. It is the
+      strongest hook available precisely because it invites verification.
+      No hook may imply the method is proven; it is not.
+
+  - stage: "recognition"
+    buyer_question: "Do you understand my actual problem?"
+    asset_types: ["the before/after exchange", "the six failure modes", "the origin story"]
+    proof_required:
+      - "The before/after exchange is a LABELLED SYNTHETIC EXAMPLE (SYN-001). It illustrates a pattern; it is not a transcript."
+      - "The origin story is the operator's own account and is presented as such."
+
+  - stage: "evidence"
+    buyer_question: "Why should I believe you?"
+    asset_types: ["the evidence section", "docs/RESEARCH_LOG.md", "commercial/EVIDENCE_LEDGER.yaml"]
+    claim_ids: ["CLAIM-001", "CLAIM-005", "CLAIM-008", "CLAIM-009"]
+    honest_note: >
+      The honest answer at this stage is: don't believe it works, because nobody
+      has proved it does. Believe that the problem is real, which two frontier
+      labs support, and that the files are free to inspect.
+
+  - stage: "education"
+    buyer_question: "Have I learned enough to evaluate this?"
+    asset_types: ["quick start", "worked example", "GLOSSARY.md", "templates"]
+    free_value:
+      - "The full method, free, MIT, with no email capture and no gate."
+      - "A filled worked example in a non-code domain."
+      - "A plain-English glossary opening with what a repository is."
+      - "Both dashboards, which double as a demo of the method's own state."
+
+  - stage: "qualification"
+    buyer_question: "Is this actually for me?"
+    best_for:
+      - "Projects that outlive one chat session"
+      - "Work moving between tools or between people"
+      - "Non-code projects that spec tools do not reach"
+    not_for:
+      - "One codebase, one agent, one continuous stretch — use Spec Kit"
+      - "Wanting better output within a session — use the performance layer"
+      - "Wanting software to install or a dashboard to log into"
+      - "Unwilling to write decisions down — there is no automation for that"
+    qualification_surface: "README 'use something else if' + HONEST_BOX.md"
+
+  - stage: "disclosure"
+    buyer_question: "What could make this a bad decision?"
+    honest_box_surface: "../HONEST_BOX.md, linked from the README masthead and the public dashboard"
+    material_limitations:
+      - "Unproven — zero external users have completed a project with it"
+      - "Nothing is enforced; an AI can ignore the anchor"
+      - "Templates are in developer register, contradicting the stated first market"
+      - "Name is provisional and will change"
+      - "The project's own front gate is closed"
+      - "Two comparison-table rows are unsourced and marked as such"
+
+  - stage: "offer"
+    buyer_question: "What exactly am I exchanging money or time for?"
+    price_or_exchange: >
+      No money. No email. No account. The exchange is your time: writing the
+      anchor honestly, and reading the files at the start of a session.
+    tiers: []
+    urgency:
+      present: false
+      real_world_basis: null
+      note: >
+        There is no deadline, no cohort, no launch window and no scarcity of any
+        kind. Constitution §5 — none may be manufactured, and none exists to describe.
+
+  - stage: "purchase"
+    buyer_question: "What happens now?"
+    checkout_or_access: "Clone, fork, or copy two files out of templates/. No checkout exists."
+    refund_or_cancellation_visible: true
+    refund_note: "Not applicable — nothing is charged and nothing is collected. Stated plainly rather than omitted."
+
+  - stage: "delivery"
+    buyer_question: "Can I obtain the value I was promised?"
+    onboarding: "README quick start, worked example, glossary, and a reduced path for people without git."
+    first_value_event: >
+      The first session where the AI answers a 'why is this like this?' question
+      from the anchor instead of inventing an answer. UNMEASURED — no external
+      user has reached it.
+
+  - stage: "outcome"
+    buyer_question: "Did this help?"
+    outcome_capture: >
+      Not yet built. Governed by commercial/OUTCOME_CAPTURE.md when it is.
+      Planned entry point is the watch-me-try-it session in BUILD Step 3, where
+      stalls are logged to state/use-ledger.md rather than inferred.
+    support_recovery: "GitHub Issues and Discussions. One person, no response-time commitment, stated as such."
+
+  - stage: "advocacy"
+    buyer_question: "Would I voluntarily tell someone else?"
+    testimonial_request: >
+      None will be solicited until the MVP proof gate clears. Any testimonial
+      will follow OUTCOME_CAPTURE.md consent rules: exact approved wording,
+      approved channels, no private message repurposed without permission.
+    referral_mechanism: "None. A public MIT repo needs no referral machinery."
+    no_pressure_rule: true
+
+distribution:
+  channels:
+    - "GitHub repository (primary)"
+    - "GitHub Pages dashboard"
+    - "Long-form origin post — not yet written, tracked as surface-04"
+    - "Short-form thread — not yet written"
+  canonical_content_sources:
+    - "README.md"
+    - "docs/RESEARCH_LOG.md"
+    - "docs/POSITIONING.md"
+  paid_acquisition: []
+  paid_acquisition_note: "None planned. There is nothing to sell, so paid acquisition would buy traffic we cannot learn from."
+
+governance:
+  constitution_path: "COMMERCIAL_CONSTITUTION.md"
+  evidence_ledger_path: "EVIDENCE_LEDGER.yaml"
+  pre_ship_checklist: "GOVERNANCE_CHECKLIST.md"
+  checklist_run: "CHECKLIST_RUN_2026-07-31.md"
+  last_reviewed: "2026-07-31"

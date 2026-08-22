@@ -1,0 +1,421 @@
+# Evidence Ledger — DriftGuard
+# Positive mirror of the quarantine register.
+# Every material public claim should be traceable to an entry here.
+#
+# Filled 2026-07-31 against README.md v4, docs/index.html, and docs/RESEARCH_LOG.md.
+# Schema per commercial/EVIDENCE_LEDGER template v0.1.
+#
+# STANDING CONFLICT DISCLOSURE (Constitution §16):
+# Every entry below was verified by the operator's AI assistant during a single
+# working session. That is INTERNAL review. It improves quality and it is not
+# independent verification, and no entry may be described publicly as
+# independently verified, audited, or attested.
+
+ledger_version: "0.1"
+product_id: "driftguard"
+last_reviewed: "2026-07-31"
+review_status: "LIVE — this repo's actual claims"
+
+evidence_tiers:
+  CONFIRMED: "Strong enough to state directly within the documented scope."
+  VERIFY: "Plausible/supportable but requires verification before public use."
+  QUARANTINED: "Not allowed as a public factual claim in current form."
+  DERIVED: "Calculated or inferred from documented inputs; derivation must be visible."
+
+claims:
+
+  # ---------------------------------------------------------------- product
+
+  - claim_id: "CLAIM-001"
+    product_id: "driftguard"
+    exact_claim: "No CLI, no account, no server, no database, and not a single API call."
+    claim_type: "feature"
+    surfaces: ["readme", "landing-page"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "this repository, inspectable in full"
+        supports: "The methodology is markdown files. Both dashboards are single HTML files that make no network requests beyond reading committed JSON from the same origin."
+        limitations: "Claim is about DriftGuard itself, not about the AI tool a user points at it. Their tool certainly makes API calls."
+    derivation: null
+    approved_wording: "DriftGuard itself makes no API calls and requires nothing installed."
+    prohibited_wording: "Using DriftGuard costs nothing to run. (False — the user's AI tool costs whatever it costs.)"
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["product-change"]
+    notes: "The strongest claim in the product and the easiest to check. Keep it exact."
+
+  - claim_id: "CLAIM-002"
+    product_id: "driftguard"
+    exact_claim: "Twenty minutes to fill in an anchor."
+    claim_type: "performance"
+    surfaces: ["readme", "landing-page", "faq"]
+    evidence_tier: "QUARANTINED"
+    evidence:
+      - source_type: "internal-test"
+        source_ref: "operator's own use, unmeasured"
+        supports: "Nothing measurable. The operator has filled in anchors and believes twenty minutes is roughly right."
+        limitations: "No one outside the operator has ever completed this task. There is no timing data, no sample, and no observation of a first-time user. The number is an estimate presented as a measurement."
+    derivation: null
+    approved_wording: "Most of the anchor can be left blank at first — start with sections 1.0 and 1.1, which is a short sitting rather than an afternoon."
+    prohibited_wording: "Twenty minutes. / Takes about twenty minutes. / Eleven of those minutes are thinking."
+    owner: "operator"
+    last_verified: null
+    review_trigger: ["first-observed-user", "new-evidence"]
+    notes: >
+      Caught during the 2026-07-31 commercial pass. The earlier README said
+      "twenty minutes, and about eleven of those are you thinking rather than
+      typing." The eleven was invented precision and read as measured. Both
+      figures removed. Restore a real number once Step 5 observes people
+      filling anchors and someone actually times it.
+
+  # ------------------------------------------------------------- competitors
+
+  - claim_id: "CLAIM-003"
+    product_id: "driftguard"
+    exact_claim: "Spec Kit ships /speckit.constitution to \"establish project principles\"."
+    claim_type: "comparison"
+    surfaces: ["readme", "landing-page", "positioning"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "github.com/github/spec-kit and github.github.com/spec-kit, observed 2026-07-31"
+        supports: "The command exists and the quoted phrase is GitHub's own wording."
+        limitations: "Only the short description is GitHub's. Longer accounts of the constitution phase circulating online come from spec-kit-plus, a derivative project."
+    derivation: null
+    approved_wording: "Spec Kit ships /speckit.constitution to \"establish project principles\"."
+    prohibited_wording: >
+      Any description of constitution.md containing MUST/SHOULD articles,
+      ratification dates, Sync Impact Reports, or "immutable architectural DNA"
+      attributed to GitHub. That wording is from a derivative project.
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["90-days", "spec-kit-release"]
+    notes: "Attribution discipline matters here. Getting a competitor's own docs wrong is the fastest way to lose an argument in public."
+
+  - claim_id: "CLAIM-004"
+    product_id: "driftguard"
+    exact_claim: "roughly 124k stars behind it"
+    claim_type: "market"
+    surfaces: ["readme"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "github.com/github/spec-kit repository page, observed 2026-07-31 (124.3k)"
+        supports: "The count on that date."
+        limitations: "Star counts move. The figure is a snapshot and is stated as approximate, which is the correct treatment."
+    derivation: null
+    approved_wording: "roughly 124k stars (observed July 2026)"
+    prohibited_wording: "Spec Kit has 124,300 stars. (False precision on a moving number.)"
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["90-days"]
+    notes: "Used to concede the competitor's scale, so overstating it costs nothing and understating it would be dishonest in our favour."
+
+  - claim_id: "CLAIM-005"
+    product_id: "driftguard"
+    exact_claim: >
+      Tessl's published review of Spec Kit lists stale specs, cross-project
+      consistency, and multi-session maintenance among the things it does not address.
+    claim_type: "comparison"
+    surfaces: ["readme", "landing-page", "positioning", "faq"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "third-party"
+        source_ref: "tessl.io/blog/a-look-at-spec-kit-githubs-spec-driven-software-development-toolkit/, observed 2026-07-31"
+        supports: "The article states these concerns are not discussed, and notes they remain largely theoretical at this stage."
+        limitations: >
+          The article says these topics are ABSENT from its own analysis and
+          early in Spec Kit's life. It does not claim Spec Kit can never address
+          them. Our wording must not imply a permanent gap.
+    derivation: null
+    approved_wording: "lists ... among the things it does not address"
+    prohibited_wording: "Tessl found Spec Kit cannot handle cross-project consistency. / Tessl concluded Spec Kit fails at multi-session work."
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["90-days", "spec-kit-release"]
+    notes: >
+      This is the single most load-bearing competitive claim in the product —
+      a third party naming our problem statement as the leader's gap. Precisely
+      because it is load-bearing, it must not be strengthened by a word.
+
+  - claim_id: "CLAIM-006"
+    product_id: "driftguard"
+    exact_claim: "Anthropic's memory tool and context editing do this well."
+    claim_type: "comparison"
+    surfaces: ["readme", "faq"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "platform.claude.com/docs/en/build-with-claude/context-editing and anthropic.com/news/context-management, observed 2026-07-31"
+        supports: "Both features exist and are documented for cross-session memory and context pruning."
+        limitations: "\"Well\" is an opinion, not a measurement. It is offered as a recommendation to send readers elsewhere, which is the only reason it is defensible."
+    derivation: null
+    approved_wording: "That provider probably ships it now — Anthropic's memory tool and context editing do this well."
+    prohibited_wording: "Anthropic's memory tool outperforms X. / benchmarks better than."
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["90-days"]
+    notes: "A recommendation away from our own product. Constitution §3 and §4 both favour keeping it."
+
+  # ----------------------------------------------------------------- vendor
+
+  - claim_id: "CLAIM-007"
+    product_id: "driftguard"
+    exact_claim: >
+      Anthropic announced on 14 May 2026 that programmatic usage would move to a
+      separate metered credit pool from 15 June, then cancelled it on the day.
+    claim_type: "market"
+    surfaces: ["readme", "positioning", "faq", "research-log"]
+    evidence_tier: "VERIFY"
+    evidence:
+      - source_type: "third-party"
+        source_ref: "aicodex.to/articles/claude-subscription-credit-changes and several independent outlets reporting the same reversal, observed 2026-07-31"
+        supports: "Consistent reporting across outlets of the announcement date, the cancellation date, and the stated reason."
+        limitations: >
+          No primary Anthropic notice has been read. Every source is secondary.
+          The dates and the quoted position are therefore second-hand.
+    derivation: null
+    approved_wording: >
+      Reported consistently across independent outlets; primary notice not read.
+      Carry the sourcing note wherever the dates appear.
+    prohibited_wording: "Anthropic confirmed... / Anthropic stated... (implies we read them saying it)"
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["pre-publish", "new-evidence"]
+    notes: >
+      This is the claim that was RETIRED and rewritten during the July scan —
+      the previous README asserted the split as current fact after it had been
+      cancelled. It is now accurate but still secondary-sourced, so the note
+      travels with it. Find the primary notice before any launch post.
+
+  # ----------------------------------------------------------------- research
+
+  - claim_id: "CLAIM-008"
+    product_id: "driftguard"
+    exact_claim: "Terminal-Bench 2.0 pass@1 37.6% → 45.9%; τ²-Bench +6.8 pp; stronger action agent +2.4 pp."
+    claim_type: "performance"
+    surfaces: ["readme", "landing-page", "research-log"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "Wu et al., arXiv:2607.08716 (Meta AI)"
+        supports: "The figures as published, for their memory-agent intervention."
+        limitations: >
+          These are THEIR results for THEIR system. They are evidence that
+          within-session decay is real and that external memory intervention
+          helps. They are not, and must never be presented as, measurements of
+          DriftGuard.
+    derivation: null
+    approved_wording: "Quote the figures with the paper cited and the subject clearly being Meta's intervention."
+    prohibited_wording: >
+      "DriftGuard improves pass@1 by 8.3 points" or any construction placing our
+      product as the subject of these numbers. Also: never "10%" — that figure
+      comes from a social-media summary, not the paper.
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["new-evidence"]
+    notes: "The most attractive numbers in the repo and the easiest to misuse. The subject of the sentence is the entire safeguard."
+
+  - claim_id: "CLAIM-009"
+    product_id: "driftguard"
+    exact_claim: >
+      Meta's memory bank separates status, stable knowledge and procedural memory —
+      the same three-way split DriftGuard holds in the repo.
+    claim_type: "comparison"
+    surfaces: ["readme", "research-log"]
+    evidence_tier: "DERIVED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "Wu et al., arXiv:2607.08716, memory-bank description"
+        supports: "Their stated three-part separation."
+        limitations: "The mapping onto BUILD/ANCHOR/use-ledger is our reading, not their claim. They have never heard of this project."
+    derivation: >
+      Their status → our BUILD_INSTRUCTIONS step state. Their knowledge → our
+      ANCHOR. Their procedural memory → our use-ledger. The correspondence is
+      an interpretation and is labelled as such in the README, which also states
+      plainly that we did not design ours from their paper.
+    approved_wording: "Presented as a convergence we noticed, with the derivation visible."
+    prohibited_wording: "Meta validated DriftGuard's architecture. / Meta uses the same system."
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["new-evidence"]
+    notes: "Derivation is stated in the README body, per the DERIVED tier requirement."
+
+  # ------------------------------------------------------------ quarantined
+
+  - claim_id: "CLAIM-010"
+    product_id: "driftguard"
+    exact_claim: "Anthropic uses \"goal drift\" to mean an agent losing the plot within one long task."
+    claim_type: "comparison"
+    surfaces: ["readme", "landing-page", "positioning"]
+    evidence_tier: "QUARANTINED"
+    evidence:
+      - source_type: "other"
+        source_ref: "carried forward from README v2 (2026-06-12); not re-checked in the July scan"
+        supports: "Nothing currently. No primary source has been located or read."
+        limitations: "Plausible and probably accurate. Unsourced is unsourced."
+    derivation: null
+    approved_wording: "Cut the row, or source it first."
+    prohibited_wording: "The row as it currently stands, unless the marking stays attached."
+    owner: "operator"
+    last_verified: null
+    review_trigger: ["pre-publish"]
+    notes: >
+      Still on three public surfaces. It is marked unverified in-line on each of
+      them, which is the minimum acceptable treatment under §2 — but marked is
+      not sourced. Source both this and CLAIM-011 or drop both rows. A
+      three-row table where every row holds beats a five-row table where two do not.
+
+  - claim_id: "CLAIM-011"
+    product_id: "driftguard"
+    exact_claim: "shadcn's `improve` uses \"what drifted\" for plan items going stale within one repo, between sessions."
+    claim_type: "comparison"
+    surfaces: ["readme", "landing-page", "positioning"]
+    evidence_tier: "QUARANTINED"
+    evidence:
+      - source_type: "other"
+        source_ref: "carried forward from README v2 (2026-06-12); not re-checked in the July scan"
+        supports: "Nothing currently."
+        limitations: "Same as CLAIM-010."
+    derivation: null
+    approved_wording: "Cut the row, or source it first."
+    prohibited_wording: "The row as it currently stands, unless the marking stays attached."
+    owner: "operator"
+    last_verified: null
+    review_trigger: ["pre-publish"]
+    notes: "See CLAIM-010."
+
+  - claim_id: "CLAIM-012"
+    product_id: "driftguard"
+    exact_claim: "Superpowers (obra) is at roughly 150,000 GitHub stars."
+    claim_type: "market"
+    surfaces: ["research-log"]
+    evidence_tier: "QUARANTINED"
+    evidence:
+      - source_type: "third-party"
+        source_ref: "Medium coverage citing the figure, observed 2026-07-31"
+        supports: "That a secondary writer reported it."
+        limitations: "Secondary only. Never observed on the repo page."
+    derivation: null
+    approved_wording: "Directional only, inside the research log, labelled secondary."
+    prohibited_wording: "Any use on a public surface."
+    owner: "operator"
+    last_verified: null
+    review_trigger: ["pre-publish"]
+    notes: "Correctly kept out of the README. Recorded so it stays out."
+
+  - claim_id: "CLAIM-013"
+    product_id: "driftguard"
+    exact_claim: "The Karpathy repositories have generated 200k+ combined stars."
+    claim_type: "market"
+    surfaces: ["method-repo-intro-register"]
+    evidence_tier: "VERIFY"
+    evidence:
+      - source_type: "other"
+        source_ref: "stated by the operator when commissioning the README rewrite; nanochat's own README shows 57.2k"
+        supports: "One data point observed directly (nanochat 57.2k, from the text supplied). The combined figure is the operator's, unverified by us."
+        limitations: "Internal to a method document, not a public product claim. Still unsourced."
+    derivation: null
+    approved_wording: "Attribute to the operator, or verify each repo and sum it."
+    prohibited_wording: "Any migration of this figure to a public marketing surface."
+    owner: "operator"
+    last_verified: null
+    review_trigger: ["pre-publish"]
+    notes: "Low stakes — it justifies a style choice, not a product claim. Logged because the ledger only works if small ones go in too."
+
+  # ------------------------------------------------------------------ naming
+
+  - claim_id: "CLAIM-014"
+    product_id: "driftguard"
+    exact_claim: >
+      Three unrelated products already use the name DriftGuard, one of which holds
+      the DriftGuard GitHub organisation.
+    claim_type: "other"
+    surfaces: ["readme", "landing-page", "naming"]
+    evidence_tier: "CONFIRMED"
+    evidence:
+      - source_type: "primary"
+        source_ref: "github.com/DriftGuard (GitOps drift detection, updated 22 June 2026); driftguard.app + Google Play + Steam (VestraCode gamepad utility); github.com/kiplangatkorir/driftguard (ML drift library). All observed 2026-07-31."
+        supports: "All three exist and the org name is unavailable."
+        limitations: "None material. Trivially re-checkable by anyone."
+    derivation: null
+    approved_wording: "As stated."
+    prohibited_wording: null
+    owner: "operator"
+    last_verified: "2026-07-31"
+    review_trigger: ["pre-rename"]
+    notes: "A claim against our own interest, which is why nobody will dispute it."
+
+  # -------------------------------------------------------------- closed loop
+
+  - claim_id: "CLAIM-015"
+    product_id: "driftguard"
+    exact_claim: >
+      Submission worked and approval worked, both passed every test written for
+      them, and the submitter had no way to learn what had been decided.
+    claim_type: "customer"
+    surfaces: ["readme"]
+    evidence_tier: "VERIFY"
+    evidence:
+      - source_type: "customer-record"
+        source_ref: "RULING_closed-loop-gate-v1, ratified 2026-08-22; origin recorded as a member's app in a factory chat"
+        supports: "That the case occurred and prompted the ruling. It is a real incident, not an illustration."
+        limitations: >
+          Second-hand to this repo — recorded in the ruling rather than observed
+          directly by whoever writes the README. The member is unnamed and has
+          not been asked whether the case may be described publicly.
+    derivation: null
+    approved_wording: >
+      Describe the pattern without identifying details, as the README does.
+      Do not name the member, the app, or the organisation.
+    prohibited_wording: >
+      Any version naming the member or their product, or implying they endorsed
+      this project. Also: "we have seen this many times" — one case is recorded.
+    owner: "operator"
+    last_verified: "2026-08-22"
+    review_trigger: ["pre-publish"]
+    notes: >
+      Worth a consent check before the launch post. A repo whose constitution
+      says testimonials need explicit permission should not describe somebody's
+      failed build on its front page without asking, even anonymised.
+
+# ---------------------------------------------------------------------------
+# SYNTHETIC EXAMPLES REGISTER (Constitution §8: "Synthetic examples must be
+# labelled as examples.")
+#
+# Nothing below is a record of something that happened. Each is illustrative
+# and must carry a visible label on every surface where it appears.
+
+synthetic_examples:
+  - example_id: "SYN-001"
+    what: "The before/after exchange about an auth flow blocking repeat requests from one IP."
+    surfaces: ["readme", "landing-page"]
+    status: "labelled 2026-07-31"
+    notes: >
+      Illustrative reconstruction of a failure pattern, not a transcript of a
+      real session. It was shipped unlabelled in README v4 and corrected in the
+      same day's commercial pass. This is the exact failure the register exists
+      to catch — a constructed example that reads as evidence.
+
+  - example_id: "SYN-002"
+    what: "The filled anchor for a two-van delivery firm in Ikeja (\"Dayo\")."
+    surfaces: ["readme"]
+    status: "labelled 2026-07-31"
+    notes: "Invented to show the shape of a filled gate. Dayo does not exist."
+
+  - example_id: "SYN-003"
+    what: "The Thursday Brief worked example (Priya Raghunathan, Leicester bookkeeping practice)."
+    surfaces: ["examples/worked-example"]
+    status: "labelled from creation"
+    notes: >
+      Already carried \"Fictional but realistic\" in its own header and
+      \"fictional one-person newsletter\" in its README before this register
+      existed. No correction needed.
+
+# Rules:
+# 1. Exact wording matters. Do not validate a vague concept and publish a stronger sentence.
+# 2. One source may support only part of a compound claim.
+# 3. Customer anecdotes do not become general performance claims.
+# 4. Internal AI review does not count as independent corroboration.
+# 5. If the evidence changes, change the public claim.

@@ -1,0 +1,17 @@
+{
+  "name": "driftguard-commercial-trust-layer",
+  "version": "0.1",
+  "status": "draft",
+  "principle": "One constitution. Many products. Many funnels. One accumulating reputation.",
+  "files": [
+    "README.md",
+    "COMMERCIAL_CONSTITUTION.md",
+    "HONEST_BOX_TEMPLATE.md",
+    "EVIDENCE_LEDGER.yaml",
+    "PRODUCT_PROFILE.yaml",
+    "FUNNEL_PROFILE.yaml",
+    "GOVERNANCE_CHECKLIST.md",
+    "OUTCOME_CAPTURE.md",
+    "MEASUREMENT_SPEC.md"
+  ]
+}

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build tracker — DriftGuard</title>
+<meta name="description" content="Band state, gate state, and every launch item with what blocks it.">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ---------------------------------------------------------------------------
+   PLACEHOLDER TOKEN LAYER — identical to index.html on purpose (Jakob's Law:
+   learning one surface should teach the other). Replace this block alone when
+   the design system is chosen. No remote fonts, no CDN, no build step: this
+   file must work from a file:// URL.
+--------------------------------------------------------------------------- */
+:root{
+  --ink:#16181d; --ink-2:#3b4049; --ink-3:#6b7280;
+  --paper:#fbfaf8; --surface:#ffffff; --surface-2:#f4f3f0;
+  --line:#e3e1dc; --line-strong:#cfccc5;
+  --accent:#8a5a20; --accent-soft:#f5ead9;
+  --ok:#2f6b46; --ok-soft:#e2efe7;
+  --warn:#8a5a20; --warn-soft:#f7ecd9;
+  --stop:#963c31; --stop-soft:#f6e3df;
+  --idle:#5a6372; --idle-soft:#eceef1;
+  --font-display:ui-serif,Georgia,"Times New Roman",serif;
+  --font-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --shadow:0 1px 2px rgba(20,20,20,.04),0 8px 24px rgba(20,20,20,.05);
+  --maxw:1140px;
+}
+html[data-theme="dark"]{
+  --ink:#eceae6; --ink-2:#b9b6b0; --ink-3:#8b8781;
+  --paper:#131417; --surface:#191b1f; --surface-2:#212429;
+  --line:#2c2f35; --line-strong:#3d4148;
+  --accent:#d5a25c; --accent-soft:#2c2418;
+  --ok:#7fc39b; --ok-soft:#1a2b21;
+  --warn:#d5a25c; --warn-soft:#2c2418;
+  --stop:#e08a7c; --stop-soft:#2e1d1a;
+  --idle:#9aa3b0; --idle-soft:#22262c;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+}
+@media (prefers-color-scheme:dark){
+  html[data-theme="auto"]{
+    --ink:#eceae6; --ink-2:#b9b6b0; --ink-3:#8b8781;
+    --paper:#131417; --surface:#191b1f; --surface-2:#212429;
+    --line:#2c2f35; --line-strong:#3d4148;
+    --accent:#d5a25c; --accent-soft:#2c2418;
+    --ok:#7fc39b; --ok-soft:#1a2b21;
+    --warn:#d5a25c; --warn-soft:#2c2418;
+    --stop:#e08a7c; --stop-soft:#2e1d1a;
+    --idle:#9aa3b0; --idle-soft:#22262c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.15;letter-spacing:-.01em;margin:0}
+.eyebrow{font:700 .72rem var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--ink-3)}
+.mono{font-family:var(--font-mono);font-size:.86em}
+
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:58px}
+.brand{font-family:var(--font-display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;
+  margin-right:auto;display:flex;align-items:center;gap:9px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.navlink{font-size:.88rem;color:var(--ink-2);text-decoration:none}
+.navlink:hover{color:var(--ink)}
+.tbtn{font:600 .8rem var(--font-sans);color:var(--ink-2);background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--line-strong);color:var(--ink)}
+
+header.page{padding:44px 0 26px}
+header.page h1{font-size:clamp(1.8rem,4.4vw,2.6rem);margin:12px 0 0}
+header.page p{color:var(--ink-2);max-width:66ch;margin:14px 0 0}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 .68rem var(--font-sans);
+  letter-spacing:.09em;text-transform:uppercase;padding:5px 10px;border-radius:999px;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.stop{background:var(--stop-soft);color:var(--stop);border-color:transparent}
+.pill.idle{background:var(--idle-soft);color:var(--idle);border-color:transparent}
+
+.banner{border:1px solid var(--line);border-left:3px solid var(--stop);background:var(--surface);
+  border-radius:var(--r);padding:18px 20px;margin:26px 0 0;box-shadow:var(--shadow)}
+.banner h3{font-size:1.06rem;margin:10px 0 0}
+.banner p{margin:7px 0 0;color:var(--ink-2);font-size:.94rem}
+
+.bands{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:30px 0 0}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:19px;
+  position:relative;overflow:hidden}
+.band.current{border-color:var(--accent);box-shadow:var(--shadow)}
+.band.current::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--accent)}
+.band h3{font-size:1.08rem;margin-bottom:7px}
+.band .signal{font-size:.9rem;color:var(--ink-2);margin:0}
+.band .gatenote{font-size:.82rem;color:var(--ink-3);margin:9px 0 0;font-style:italic}
+.band .prog{height:5px;border-radius:999px;background:var(--surface-2);margin-top:14px;overflow:hidden}
+.band .prog i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.band .count{font-size:.78rem;color:var(--ink-3);margin-top:7px;display:block}
+
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));margin:30px 0 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px}
+.stat .n{font-family:var(--font-display);font-size:1.85rem;font-weight:600;line-height:1}
+.stat .l{font:700 .64rem var(--font-sans);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:7px}
+.stat.blocked .n{color:var(--stop)}
+.stat.complete .n{color:var(--ok)}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:36px 0 0;
+  padding:15px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.controls label{font:700 .66rem var(--font-sans);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3)}
+select,input[type=search]{font:inherit;font-size:.9rem;padding:7px 10px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+input[type=search]{flex:1;min-width:160px}
+select:hover,input[type=search]:hover{border-color:var(--line-strong)}
+
+.items{margin:22px 0 0;display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;display:grid;gap:8px}
+.item.is-blocked{border-left:3px solid var(--stop)}
+.item.is-complete{border-left:3px solid var(--ok)}
+.item.is-progress{border-left:3px solid var(--warn)}
+.item.is-parked{border-left:3px solid var(--idle);opacity:.75}
+.item .row1{display:flex;flex-wrap:wrap;gap:9px;align-items:baseline}
+.item h3{font-size:1rem;margin:0;flex:1;min-width:180px}
+.item .id{font-family:var(--font-mono);font-size:.76rem;color:var(--ink-3)}
+.item .brief{margin:0;font-size:.93rem;color:var(--ink-2)}
+.item .notes{margin:0;font-size:.86rem;color:var(--ink-3);padding-left:11px;
+  border-left:2px solid var(--line)}
+.item .deps{font-size:.8rem;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:12px}
+.item .deps b{font-weight:700;color:var(--ink-2)}
+.empty{padding:38px;text-align:center;color:var(--ink-3);background:var(--surface);
+  border:1px dashed var(--line-strong);border-radius:var(--r)}
+
+.callout{margin:44px 0 0;padding:20px 22px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-lg)}
+.callout h3{font-size:1.05rem}
+.callout p{margin:9px 0 0;color:var(--ink-2);font-size:.93rem;max-width:70ch}
+.qm{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.qm span{font:600 .78rem var(--font-mono);padding:4px 9px;border-radius:var(--r-sm);
+  background:var(--paper);border:1px solid var(--line);color:var(--ink-3);
+  text-decoration:line-through;text-decoration-color:var(--stop)}
+
+footer{padding:44px 0 64px;margin-top:44px;border-top:1px solid var(--line);
+  font-size:.87rem;color:var(--ink-3)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><span class="dot"></span><span data-product>DriftGuard</span></span>
+  <a class="navlink" href="index.html">Overview</a>
+  <a class="navlink" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/LAUNCH_CHECKLIST.md">Checklist</a>
+  <a class="navlink" href="https://github.com/Abumaude/DriftGuard-MVP/blob/main/docs/RESEARCH_LOG.md">Research</a>
+  <button class="tbtn" id="theme" type="button" aria-label="Toggle colour theme">Theme</button>
+</div></div>
+
+<header class="page"><div class="wrap">
+  <span class="eyebrow">Operator instrument</span>
+  <h1>Build tracker</h1>
+  <p>Every launch item, which band it belongs to, and what blocks it. This page reads
+  <span class="mono">data/tracker.json</span> — to change what it shows, edit the JSON, not the
+  markup.</p>
+  <div id="gate-slot"></div>
+  <div class="bands" id="bands"></div>
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <label for="f-cat">Category</label>
+    <select id="f-cat"><option value="">All</option></select>
+    <label for="f-status">Status</label>
+    <select id="f-status"><option value="">All</option></select>
+    <label for="f-band">Band</label>
+    <select id="f-band"><option value="">All</option></select>
+    <input type="search" id="f-q" placeholder="Search items…" aria-label="Search items">
+    <button class="tbtn" id="f-reset" type="button">Reset</button>
+  </div>
+
+  <div class="items" id="items"></div>
+
+  <div class="callout">
+    <h3>Quarantined metrics</h3>
+    <p>Real, worth watching, and barred from clearing a proof gate. The failure this project
+    corrects is twenty builds and nothing shipped; a launch measured in stars is that failure with
+    a scoreboard attached. A band advances on observed behaviour from a named person, or it does
+    not advance.</p>
+    <div class="qm" id="qm"></div>
+  </div>
+</div></header>
+
+<footer><div class="wrap">
+  <span>Reads <span class="mono">data/tracker.json</span> · no server, no build step</span>
+  <span id="freshness" class="mono">—</span>
+</div></footer>
+
+<script type="application/json" id="seed">
+{
+ "schema": "driftguard-tracker/v3",
+ "project": "driftguard-launch",
+ "productName": "DriftGuard",
+ "nameProvisional": true,
+ "updated": "2026-07-31",
+ "serial": 12,
+ "scopeNote": "Launch-scoped tracker. Supersedes the capture-plugin feature tracker (driftguard-tracker/v2) for launch purposes only; that tracker remains canonical for the wedge build and lives in its own repo. This file is the single source the dashboards read. Edit this, not the HTML. Commercial trust layer adopted 2026-07-31 (ANCHOR Section 7); commercial items carry the comm- prefix.",
+ "gate": {
+  "status": "closed",
+  "section": "ANCHOR.md 1.0",
+  "reason": "The anchor sentence has no named person. Under constraint 1, no build action past Step 0 is permitted.",
+  "action": "Fill ANCHOR.md Section 1.0 with a real human you can message today.",
+  "publishedClosedDeliberately": true
+ },
+ "bands": [
+  {
+   "id": "prototype",
+   "name": "Prototype",
+   "signal": "A reaction from one named person",
+   "state": "current",
+   "gateNote": "Quarantined metrics cannot clear this gate."
+  },
+  {
+   "id": "mvp",
+   "name": "MVP",
+   "signal": "Someone other than the operator filled in an anchor, used it across two sessions, and returned with a specific complaint",
+   "state": "locked",
+   "gateNote": "A compliment does not clear this. Only a complaint proves the artefact was used."
+  },
+  {
+   "id": "v1",
+   "name": "v1",
+   "signal": "Used on a second project by someone else, or paid for",
+   "state": "locked",
+   "gateNote": ""
+  }
+ ],
+ "quarantinedMetrics": [
+  "GitHub stars",
+  "Forks",
+  "Page traffic",
+  "Followers",
+  "Newsletter signups"
+ ],
+ "items": [
+  {
+   "id": "gate-00",
+   "name": "Fill the front gate",
+   "brief": "ANCHOR.md Section 1.0 needs a real named person, a result in their world, and an externally generated signal.",
+   "category": "gate",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [
+    "gate-05",
+    "launch-01"
+   ],
+   "notes": "Published closed on purpose. A governance methodology that waives its own front gate has lost the argument before it starts. Operator action only — an agent must not fill this in."
+  },
+  {
+   "id": "launch-01",
+   "name": "Create the org and publish",
+   "brief": "Pick an available GitHub organisation name, create it, push the bundle, enable Issues, Discussions, and Pages.",
+   "category": "launch",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "gate-00",
+    "decide-01"
+   ],
+   "blocks": [
+    "launch-02",
+    "launch-03",
+    "surface-04",
+    "surface-05",
+    "var-atlas",
+    "var-contractor",
+    "var-research",
+    "var-shortform",
+    "var-suzerain"
+   ],
+   "notes": "The DriftGuard org is taken. Check org availability first, not last."
+  },
+  {
+   "id": "launch-02",
+   "name": "Resolve the Scope Lock verification",
+   "brief": "Confirm the tool exists, its licence, and its state — or remove the named recommendation from all public copy.",
+   "category": "launch",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [
+    "var-scopelock"
+   ],
+   "notes": "UNVERIFIED as of 2026-07-31. Constraint 9 requires a source and a verification date for every public claim about another project. A 404 on launch day costs more than the recommendation is worth."
+  },
+  {
+   "id": "launch-03",
+   "name": "Stand up feedback intake",
+   "brief": "Pinned discussion, 90-second form, booking link for watch-me-try-it sessions, feedback folder, analytics.",
+   "category": "launch",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [
+    "outreach-01"
+   ],
+   "notes": "The booking link is the highest-value item and the most likely to be skipped. Watching someone struggle with your own artefact is uncomfortable; that is the point."
+  },
+  {
+   "id": "outreach-01",
+   "name": "Reach 5–15 named people individually",
+   "brief": "Individual messages, not a broadcast. Three or more observed attempting to fill an anchor. Log every stall.",
+   "category": "launch",
+   "status": "blocked",
+   "band": "mvp",
+   "priority": "high",
+   "blockedBy": [
+    "launch-03"
+   ],
+   "blocks": [
+    "comm-07",
+    "register-01"
+   ],
+   "notes": "A post to a feed is not this item."
+  },
+  {
+   "id": "register-01",
+   "name": "Non-technical register pass",
+   "brief": "Rewrite templates against observed stall points, not against a general intuition that it should be simpler.",
+   "category": "launch",
+   "status": "blocked",
+   "band": "mvp",
+   "priority": "high",
+   "blockedBy": [
+    "outreach-01"
+   ],
+   "blocks": [
+    "decide-02"
+   ],
+   "notes": "Constraint 2 governs: only change what someone was observed to stumble over. The register gap is named openly in ANCHOR.md 1.4 as the known weak point."
+  },
+  {
+   "id": "decide-01",
+   "name": "Choose the GitHub org name",
+   "brief": "Apply the five criteria in docs/NAMING.md. Org availability checked first.",
+   "category": "decision",
+   "status": "not-started",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [
+    "launch-01"
+   ],
+   "notes": "Not the product rename — that is a separate operation at Step 7, between the MVP and v1 gates."
+  },
+  {
+   "id": "decide-02",
+   "name": "Product rename",
+   "brief": "Full rename: two find-and-replace commands, org transfer, external listings updated, provisional note removed.",
+   "category": "decision",
+   "status": "blocked",
+   "band": "v1",
+   "priority": "medium",
+   "blockedBy": [
+    "register-01"
+   ],
+   "blocks": [
+    "var-capture"
+   ],
+   "notes": "Between the MVP and v1 gates is the cheapest moment. Earlier renames something unproven; later breaks links that matter."
+  },
+  {
+   "id": "decide-03",
+   "name": "Pricing decision",
+   "brief": "Lock pricing and record it as a NEW appended anchor section, per constraint 10.",
+   "category": "decision",
+   "status": "blocked",
+   "band": "v1",
+   "priority": "low",
+   "blockedBy": [
+    "var-capture"
+   ],
+   "blocks": [],
+   "notes": "Do not edit Section 6. Append."
+  },
+  {
+   "id": "surface-01",
+   "name": "Master README",
+   "brief": "The landing page, the whole marketing surface, and the only thing most people will read.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "v4. Rewritten in Karpathy register: quick start before philosophy, real paste-able anchor and prompt blocks, a before/after exchange showing the invented-reason failure, annotated file tree, lowercase headers, late 'repo' section with merge/reject examples. Plain-English pass throughout; GLOSSARY.md added for the non-technical reader. Contains Abumaude placeholders — see BUILD_INSTRUCTIONS Step 1 for the command."
+  },
+  {
+   "id": "surface-02",
+   "name": "Public dashboard",
+   "brief": "docs/index.html — what this is, the variant library, live repo status, how to start.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Single file, no build step, works from file://. Reads docs/data/*.json only — no network calls to any API, per design principle 6. Hero and section copy realigned to the README register; before/after transcript section added."
+  },
+  {
+   "id": "surface-03",
+   "name": "Build tracker",
+   "brief": "docs/tracker.html — band state, gate state, every item and what blocks it.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Reads this file. To change what it shows, edit the JSON, not the markup."
+  },
+  {
+   "id": "surface-04",
+   "name": "Long-form origin post",
+   "brief": "Twenty things built, none shipped, and what changed.",
+   "category": "surface",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "The strongest asset the project has, because it is the one thing no competitor can copy."
+  },
+  {
+   "id": "surface-05",
+   "name": "Social preview image",
+   "brief": "One PNG per repo — the OG image shown wherever the URL is pasted.",
+   "category": "surface",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Its absence is conspicuous. Roughly fifteen minutes per repo."
+  },
+  {
+   "id": "res-01",
+   "name": "July pre-launch scan",
+   "brief": "Re-verified every load-bearing claim in the May positioning. Three retired.",
+   "category": "research",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [
+    "res-02"
+   ],
+   "notes": "docs/RESEARCH_LOG.md. Spec Kit shipped /speckit.constitution and /speckit.converge; the Anthropic billing split was cancelled; the org name is taken."
+  },
+  {
+   "id": "res-02",
+   "name": "Positioning delta and rebuttal kit",
+   "brief": "New frame — concede first, then narrow to the seams. Eight rehearsed objections with honest answers.",
+   "category": "research",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "res-01"
+   ],
+   "blocks": [],
+   "notes": "docs/POSITIONING.md. Includes what would change the strategy, so a future session can tell a real signal from a bad week."
+  },
+  {
+   "id": "res-03",
+   "name": "Unattended-mode provision (template v2)",
+   "brief": "Optional watcher for unattended runs, seeded from the repo, constrained to memory-grounded reminders.",
+   "category": "research",
+   "status": "parked",
+   "band": "v1",
+   "priority": "low",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Captured, not built. Harness-layer. Any driftguard-watcher variant impulse is the architect's trap in a lab coat."
+  },
+  {
+   "id": "var-research",
+   "name": "variant-research",
+   "brief": "Research projects — sources, claims, synthesis. Dual mode: researcher and supervisor.",
+   "category": "variant",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Anchor and build pair complete. Awaiting repo publication."
+  },
+  {
+   "id": "var-contractor",
+   "name": "variant-contractor-handoff",
+   "brief": "Handing an AI-started build to a human contractor.",
+   "category": "variant",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Strongest differentiator from Spec Kit — multi-operator delegation is outside its scope entirely."
+  },
+  {
+   "id": "var-shortform",
+   "name": "variant-shortform-video",
+   "brief": "A short-form video channel as a governed pipeline.",
+   "category": "variant",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "low",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Non-engineering domain — useful evidence for the any-domain claim."
+  },
+  {
+   "id": "var-courseware",
+   "name": "variant-courseware",
+   "brief": "Course and curriculum builds.",
+   "category": "variant",
+   "status": "in-progress",
+   "band": "mvp",
+   "priority": "low",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "~80%. Section 13 cleanup pending. Do not publish until complete — a link to a partial repo costs more than a missing row."
+  },
+  {
+   "id": "var-atlas",
+   "name": "atlas",
+   "brief": "Operator infrastructure: portfolio catalogue across 8+ repos.",
+   "category": "variant",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "low",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Publish marked clearly as operator infrastructure, not the starting point."
+  },
+  {
+   "id": "var-suzerain",
+   "name": "suzerain",
+   "brief": "Operator infrastructure: cross-repo and lineage governance.",
+   "category": "variant",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "low",
+   "blockedBy": [
+    "launch-01"
+   ],
+   "blocks": [],
+   "notes": "Same treatment as atlas."
+  },
+  {
+   "id": "var-capture",
+   "name": "capture-plugin (the wedge)",
+   "brief": "Browser capture into a governed repo — the wedge MVP.",
+   "category": "variant",
+   "status": "blocked",
+   "band": "v1",
+   "priority": "high",
+   "blockedBy": [
+    "decide-02"
+   ],
+   "blocks": [
+    "decide-03"
+   ],
+   "notes": "Has its own anchor, build file, and feature tracker in its own repo. Gated behind the MVP proof gate; do not start early."
+  },
+  {
+   "id": "var-scopelock",
+   "name": "scope-lock-bridge",
+   "brief": "Adapter between project-level governance and task-level scope enforcement.",
+   "category": "variant",
+   "status": "parked",
+   "band": "v1",
+   "priority": "low",
+   "blockedBy": [
+    "launch-02"
+   ],
+   "blocks": [],
+   "notes": "Parked pending the Scope Lock verification. Restore to queued if the tool is confirmed."
+  },
+  {
+   "id": "comm-01",
+   "name": "Ship the commercial trust layer as a resource",
+   "brief": "commercial/ published verbatim for repo users to adopt in whole, in part, or not at all.",
+   "category": "decision",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [
+    "comm-02",
+    "comm-03",
+    "comm-08"
+   ],
+   "notes": "ANCHOR Section 7 records it as an included resource, not binding law. Constraints 1-11 unchanged."
+  },
+  {
+   "id": "comm-02",
+   "name": "Fill the evidence ledger",
+   "brief": "Every material public claim from the README and dashboard tiered, sourced, and limited.",
+   "category": "research",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "comm-01"
+   ],
+   "blocks": [
+    "comm-04"
+   ],
+   "notes": "14 claims. 3 QUARANTINED (two unsourced comparison rows, one withdrawn time-to-value figure), 1 VERIFY, 1 DERIVED, rest CONFIRMED. Plus a synthetic-examples register."
+  },
+  {
+   "id": "comm-03",
+   "name": "Publish the honest box",
+   "brief": "HONEST_BOX.md at repo root, linked from the README masthead and the dashboard.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [
+    "comm-01"
+   ],
+   "blocks": [
+    "comm-04"
+   ],
+   "notes": "Leads its 'do not adopt' list with the most common use case, sent to a competitor. Anti-theatre test run 2026-07-31."
+  },
+  {
+   "id": "comm-04",
+   "name": "Run the pre-ship governance checklist",
+   "brief": "Full checklist against the README and public dashboard, with failures recorded before passes.",
+   "category": "research",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "comm-02",
+    "comm-03"
+   ],
+   "blocks": [],
+   "notes": "3 fails found and corrected: unlabelled synthetic example, unmeasured performance claim, internal review implying independence. All three survived the earlier 36-defect adversarial pass — different class of defect."
+  },
+  {
+   "id": "comm-05",
+   "name": "Source or cut the two quarantined comparison rows",
+   "brief": "Anthropic 'goal drift' and shadcn 'what drifted' rows remain unsourced on three public surfaces.",
+   "category": "research",
+   "status": "not-started",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "BLOCKING before the long-form post and thread, not before the repo goes public — marking is visible and honest, but a post amplifies. CLAIM-010, CLAIM-011. Cut both or source both."
+  },
+  {
+   "id": "comm-07",
+   "name": "Restore a real time-to-value figure",
+   "brief": "The 'twenty minutes' estimate was withdrawn; a measured number returns once a first run is timed.",
+   "category": "research",
+   "status": "blocked",
+   "band": "mvp",
+   "priority": "medium",
+   "blockedBy": [
+    "outreach-01"
+   ],
+   "blocks": [],
+   "notes": "CLAIM-002. The watch-me-try-it sessions in Step 5 are where this gets measured rather than estimated."
+  },
+  {
+   "id": "comm-08",
+   "name": "Write the commercial layer usage guide",
+   "brief": "commercial/HOW_TO_USE.md — the five rhythms, the paste-able prompts, the two gates, and the condition for cutting the layer.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [
+    "comm-01"
+   ],
+   "blocks": [],
+   "notes": "Written because the layer is nine files that mostly do nothing until publish time, and that is the part nobody infers from the templates. Frames them as checkpoints rather than documents to complete."
+  },
+  {
+   "id": "surface-06",
+   "name": "Operating manual",
+   "brief": "docs/OPERATING_MANUAL.md — which files get touched, when, the session prompts, and what not to do.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Written because the file set with no usage order is its own kind of drift. Sorts the repo by reader — stranger, operator, agent — which is the thing the file list does not convey."
+  },
+  {
+   "id": "gate-05",
+   "name": "Process walkthrough (closed-loop gate)",
+   "brief": "Draw the launch process, walk every actor end to end, close the two known dead ends in the spec before Step 1.",
+   "category": "gate",
+   "status": "blocked",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [
+    "gate-00"
+   ],
+   "blocks": [],
+   "notes": "BUILD Step 0.5, operator_review: required. Two dead ends already found and recorded in ANCHOR 8.4 — issue filers and PR authors enter an untracked queue with no stated outcome path. Fixed in CONTRIBUTING and the issue templates; confirm at the walkthrough."
+  },
+  {
+   "id": "comm-09",
+   "name": "Adopt the closed-loop gate",
+   "brief": "RULING_closed-loop-gate-v1 applied to both templates, this anchor, the worked example, and the checklist.",
+   "category": "decision",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "critical",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Ratified 2026-08-22. Actor loop closure table in every anchor, walkthrough gate before every build, NO DEAD ENDS in every checklist. Numbered Step 0.5 here because Step 0 is the ship-or-drift front gate; reconciliation recorded in ANCHOR Section 8.2."
+  },
+  {
+   "id": "comm-10",
+   "name": "Consent check on the origin case",
+   "brief": "The README describes a member's failed build, anonymised. Ask before publishing.",
+   "category": "research",
+   "status": "not-started",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "CLAIM-015, tier VERIFY. A repo whose constitution requires explicit permission for testimonials should not describe somebody's failure on its front page without asking, even without identifying details."
+  },
+  {
+   "id": "surface-07",
+   "name": "Agent entry points",
+   "brief": "CLAUDE.md and AGENTS.md so any agent opening the repo knows the rules without being told.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "medium",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "CLAUDE.md is read automatically by Claude Code and carries the first-publish steps plus the four rules most likely to be broken. AGENTS.md serves every other agent convention."
+  },
+  {
+   "id": "surface-08",
+   "name": "Pre-push verifier",
+   "brief": "scripts/verify.sh — tracker graph, seed drift, relative links, dashboard isolation, and derived counts typed into prose.",
+   "category": "surface",
+   "status": "complete",
+   "band": "prototype",
+   "priority": "high",
+   "blockedBy": [],
+   "blocks": [],
+   "notes": "Written after a hand-typed '2 actionable items and 12 blocked ones' survived an adversarial review, a commercial governance pass, and two further edits while the real numbers were 3 and 13. The lesson was not to be more careful — a derived number in prose always drifts — so the check is mechanical and fails the build."
+  }
+ ],
+ "statusRule": "An item is 'blocked' when any item in its blockedBy is not complete (gate-00 is blocked by an external precondition: operator input). Otherwise 'not-started'. complete / in-progress / parked / retired are set by hand. 'blocks' is derived from every other item's blockedBy — never edit it directly."
+}
+</script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* Every rendered occurrence of the product name comes from this constant.
+     The <title> in <head> also carries it as static text (overwritten below) —
+     a rename's find-and-replace catches it the same way. See docs/NAMING.md. */
+  var PRODUCT = 'DriftGuard';
+
+  var STATUS = {
+    'blocked':     {label:'Blocked',     cls:'stop', mod:'is-blocked'},
+    'not-started': {label:'Not started', cls:'idle', mod:''},
+    'in-progress': {label:'In progress', cls:'warn', mod:'is-progress'},
+    'complete':    {label:'Complete',    cls:'ok',   mod:'is-complete'},
+    'parked':      {label:'Parked',      cls:'idle', mod:'is-parked'},
+    'retired':     {label:'Retired',     cls:'idle', mod:'is-parked'}
+  };
+  var PRIORITY = {critical:'Critical', high:'High', medium:'Medium', low:'Low'};
+
+  var data = null, filters = {cat:'', status:'', band:'', q:''};
+
+  /* ---- theme (in-memory only; no browser storage) ---- */
+  var root = document.documentElement, order = ['auto','light','dark'];
+  document.getElementById('theme').addEventListener('click', function(){
+    var next = order[(order.indexOf(root.getAttribute('data-theme')) + 1) % order.length];
+    root.setAttribute('data-theme', next);
+    this.textContent = next === 'auto' ? 'Theme' : (next[0].toUpperCase() + next.slice(1));
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-product]'), function(el){
+    el.textContent = PRODUCT;
+  });
+  document.title = 'Build tracker — ' + PRODUCT;
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function titleise(s){
+    s = String(s || '');
+    return s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ');
+  }
+
+  /* ---- render ---- */
+
+  function renderGate(){
+    var g = data.gate, slot = document.getElementById('gate-slot');
+    if (!g){ slot.innerHTML = ''; return; }
+    var closed = g.status === 'closed';
+    slot.innerHTML = '<div class="banner" style="border-left-color:var(--' +
+      (closed ? 'stop' : 'ok') + ')">' +
+      '<span class="pill ' + (closed ? 'stop' : 'ok') + '">Front gate ' + esc(g.status) + '</span>' +
+      '<h3>' + esc(g.section || 'Front gate') + '</h3>' +
+      '<p>' + esc(g.reason || '') + '</p>' +
+      (g.action ? '<p><strong>Next action:</strong> ' + esc(g.action) + '</p>' : '') +
+      (closed ? '<p class="muted">Published closed rather than quietly waived. Everything below ' +
+        'is visible; almost none of it may start.</p>' : '') +
+      '</div>';
+  }
+
+  function renderBands(){
+    var items = data.items || [];
+    document.getElementById('bands').innerHTML = (data.bands || []).map(function(b){
+      /* Parked and retired items are excluded from the denominator — leaving
+         them in means a band with anything parked can never reach 100%. */
+      var mine = items.filter(function(i){
+        return i.band === b.id && i.status !== 'parked' && i.status !== 'retired';
+      });
+      var done = mine.filter(function(i){ return i.status === 'complete'; }).length;
+      var pct  = mine.length ? Math.round(done / mine.length * 100) : 0;
+      var state = b.state === 'current'
+        ? '<span class="pill warn">Current</span>'
+        : '<span class="pill idle">Locked</span>';
+      return '<article class="band' + (b.state === 'current' ? ' current' : '') + '">' +
+        state + '<h3 style="margin-top:9px">' + esc(b.name) + '</h3>' +
+        '<p class="signal"><strong>Signal:</strong> ' + esc(b.signal) + '</p>' +
+        (b.gateNote ? '<p class="gatenote">' + esc(b.gateNote) + '</p>' : '') +
+        '<div class="prog"><i style="width:' + pct + '%"></i></div>' +
+        '<span class="count">' + done + ' of ' + mine.length + ' active items complete</span>' +
+        '</article>';
+    }).join('');
+  }
+
+  function renderStats(){
+    var items = data.items || [];
+    function n(s){ return items.filter(function(i){ return i.status === s; }).length; }
+    var tiles = [
+      {n: items.length,        l:'Items tracked', c:''},
+      {n: n('blocked'),        l:'Blocked',       c:'blocked'},
+      {n: n('complete'),       l:'Complete',      c:'complete'},
+      {n: n('in-progress'),    l:'In progress',   c:''},
+      {n: n('not-started'),    l:'Not started',   c:''},
+      {n: n('parked'),         l:'Parked',        c:''}
+    ];
+    document.getElementById('stats').innerHTML = tiles.map(function(t){
+      return '<div class="stat ' + t.c + '"><div class="n">' + t.n +
+             '</div><div class="l">' + t.l + '</div></div>';
+    }).join('');
+  }
+
+  function fillSelect(id, values, labeller){
+    var sel = document.getElementById(id);
+    values.forEach(function(v){
+      var o = document.createElement('option');
+      o.value = v; o.textContent = labeller ? labeller(v) : titleise(v);
+      sel.appendChild(o);
+    });
+  }
+
+  function uniq(arr){ return arr.filter(function(v,i){ return arr.indexOf(v) === i; }); }
+
+  function renderItems(){
+    var items = (data.items || []).filter(function(i){
+      if (filters.cat    && i.category !== filters.cat)    return false;
+      if (filters.status && i.status   !== filters.status) return false;
+      if (filters.band   && i.band     !== filters.band)   return false;
+      if (filters.q){
+        var hay = (i.name + ' ' + i.brief + ' ' + (i.notes||'') + ' ' + i.id).toLowerCase();
+        if (hay.indexOf(filters.q.toLowerCase()) === -1) return false;
+      }
+      return true;
+    });
+
+    var el = document.getElementById('items');
+    if (!items.length){
+      el.innerHTML = '<div class="empty">No items match those filters.</div>';
+      return;
+    }
+
+    el.innerHTML = items.map(function(i){
+      var st = STATUS[i.status] || {label:i.status, cls:'idle', mod:''};
+      var deps = '';
+      if ((i.blockedBy && i.blockedBy.length) || (i.blocks && i.blocks.length)){
+        deps = '<div class="deps">' +
+          (i.blockedBy && i.blockedBy.length
+            ? '<span><b>Blocked by:</b> <span class="mono">' + esc(i.blockedBy.join(', ')) + '</span></span>'
+            : '') +
+          (i.blocks && i.blocks.length
+            ? '<span><b>Blocks:</b> <span class="mono">' + esc(i.blocks.join(', ')) + '</span></span>'
+            : '') +
+          '</div>';
+      }
+      return '<article class="item ' + st.mod + '">' +
+        '<div class="row1">' +
+          '<span class="id">' + esc(i.id) + '</span>' +
+          '<h3>' + esc(i.name) + '</h3>' +
+          '<span class="pill ' + st.cls + '">' + esc(st.label) + '</span>' +
+          '<span class="pill">' + esc(titleise(i.category)) + '</span>' +
+          '<span class="pill">' + esc(PRIORITY[i.priority] || i.priority) + '</span>' +
+          '<span class="pill">' + esc(i.band) + '</span>' +
+        '</div>' +
+        '<p class="brief">' + esc(i.brief) + '</p>' +
+        (i.notes ? '<p class="notes">' + esc(i.notes) + '</p>' : '') +
+        deps +
+        '</article>';
+    }).join('');
+  }
+
+  function renderQM(){
+    document.getElementById('qm').innerHTML =
+      (data.quarantinedMetrics || []).map(function(m){
+        return '<span>' + esc(m) + '</span>';
+      }).join('');
+  }
+
+  function renderAll(){
+    renderGate(); renderBands(); renderStats(); renderItems(); renderQM();
+    document.getElementById('freshness').textContent =
+      data.updated ? 'data as of ' + data.updated : '';
+  }
+
+  /* Options are rebuilt whenever the data changes; listeners are attached once.
+     Keeping these separate is what stops a network refresh stacking duplicate
+     handlers on every control. */
+  function fillFilterOptions(){
+    var items = data.items || [];
+    ['f-cat','f-status','f-band'].forEach(function(id){
+      var s = document.getElementById(id);
+      while (s.options.length > 1) s.remove(1);
+      s.value = '';
+    });
+    fillSelect('f-cat',    uniq(items.map(function(i){ return i.category; })).sort());
+    fillSelect('f-status', uniq(items.map(function(i){ return i.status;   })).sort(),
+               function(v){ return (STATUS[v] || {label:v}).label; });
+    fillSelect('f-band',   (data.bands || []).map(function(b){ return b.id; }),
+               function(v){
+                 var b = (data.bands || []).filter(function(x){ return x.id === v; })[0];
+                 return b ? b.name : titleise(v);
+               });
+  }
+
+  function wireFilterEvents(){
+    document.getElementById('f-cat')   .addEventListener('change', function(){ filters.cat    = this.value; renderItems(); });
+    document.getElementById('f-status').addEventListener('change', function(){ filters.status = this.value; renderItems(); });
+    document.getElementById('f-band')  .addEventListener('change', function(){ filters.band   = this.value; renderItems(); });
+    document.getElementById('f-q')     .addEventListener('input',  function(){ filters.q      = this.value; renderItems(); });
+    document.getElementById('f-reset') .addEventListener('click',  function(){
+      filters = {cat:'', status:'', band:'', q:''};
+      ['f-cat','f-status','f-band','f-q'].forEach(function(id){ document.getElementById(id).value = ''; });
+      renderItems();
+    });
+  }
+
+  /* ---- boot: embedded seed first, network refresh if available ---- */
+  try { data = JSON.parse(document.getElementById('seed').textContent); }
+  catch (e) { data = {items:[], bands:[]}; }
+  fillFilterOptions();
+  wireFilterEvents();
+  renderAll();
+
+  if (window.fetch && location.protocol !== 'file:'){
+    fetch('data/tracker.json', {cache:'no-cache'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d || !d.items) return;
+        data = d;
+        filters = {cat:'', status:'', band:'', q:''};
+        document.getElementById('f-q').value = '';
+        fillFilterOptions();
+        renderAll();
+      })
+      .catch(function(){ /* offline or blocked — seed already rendered */ });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{
+  "schema": "driftguard-variants/v1",
+  "updated": "2026-07-31",
+  "note": "Public-facing variant library. The dashboard reads this file. Set 'published': true and fill 'repo' only when a repository is genuinely live — an entry pointing at nothing costs more credibility than a missing row.",
+  "org": "Abumaude",
+  "variants": [
+    {
+      "slug": "research",
+      "name": "Research",
+      "governs": "Research projects — sources, claims, and synthesis",
+      "audience": "Researchers, analysts, and anyone whose output rests on a chain of sources",
+      "domain": "non-code",
+      "state": "complete",
+      "published": false,
+      "repo": null,
+      "detail": "Dual mode. The researcher mode governs one person's programme; the supervisor mode governs several people's work against one standard, which is the case no per-repo spec tool addresses."
+    },
+    {
+      "slug": "contractor-handoff",
+      "name": "Contractor Handoff",
+      "governs": "Handing an AI-started build to a human who was not there",
+      "audience": "Anyone who has started something with an agent and needs a person to finish it",
+      "domain": "code",
+      "state": "complete",
+      "published": false,
+      "repo": null,
+      "detail": "The clearest case for governance that outlives one operator. The contractor reads the anchor instead of being briefed, and the decisions they inherit come with their reasons attached."
+    },
+    {
+      "slug": "shortform-video",
+      "name": "Short-Form Video Channel",
+      "governs": "A video channel as a governed production pipeline",
+      "audience": "Creators running a recurring content operation",
+      "domain": "non-code",
+      "state": "complete",
+      "published": false,
+      "repo": null,
+      "detail": "A meta-build for channel setup plus a recurring per-video sequence. Evidence for the claim that this works outside software."
+    },
+    {
+      "slug": "courseware",
+      "name": "Courseware",
+      "governs": "Course and curriculum builds",
+      "audience": "Anyone building teaching material that outlives one draft",
+      "domain": "non-code",
+      "state": "in-progress",
+      "published": false,
+      "repo": null,
+      "detail": "Roughly 80%. Not published until complete."
+    },
+    {
+      "slug": "atlas",
+      "name": "Atlas",
+      "governs": "Operator infrastructure — a portfolio catalogue across many repos",
+      "audience": "Operators running eight or more governed projects",
+      "domain": "meta",
+      "state": "complete",
+      "published": false,
+      "repo": null,
+      "detail": "Not a starting point. Useful once you have enough governed projects that finding the right one is itself a problem."
+    },
+    {
+      "slug": "suzerain",
+      "name": "Suzerain",
+      "governs": "Operator infrastructure — cross-repo and lineage governance",
+      "audience": "Operators whose projects inherit from one another",
+      "domain": "meta",
+      "state": "complete",
+      "published": false,
+      "repo": null,
+      "detail": "Not a starting point. Handles the case where one project's decisions must bind its descendants."
+    },
+    {
+      "slug": "capture-plugin",
+      "name": "Capture Plugin",
+      "governs": "Capturing decision-dense exchanges from any AI chat into a governed repo",
+      "audience": "Anyone whose decisions currently die in chat history",
+      "domain": "code",
+      "state": "planned",
+      "published": false,
+      "repo": null,
+      "detail": "The wedge. Gated behind the MVP proof gate — it is not started early, on purpose, because starting it early is exactly the failure this project was built to correct."
+    }
+  ]
+}

@@ -1,0 +1,591 @@
+{
+  "schema": "driftguard-tracker/v3",
+  "project": "driftguard-launch",
+  "productName": "DriftGuard",
+  "nameProvisional": true,
+  "updated": "2026-07-31",
+  "serial": 12,
+  "scopeNote": "Launch-scoped tracker. Supersedes the capture-plugin feature tracker (driftguard-tracker/v2) for launch purposes only; that tracker remains canonical for the wedge build and lives in its own repo. This file is the single source the dashboards read. Edit this, not the HTML. Commercial trust layer adopted 2026-07-31 (ANCHOR Section 7); commercial items carry the comm- prefix.",
+  "gate": {
+    "status": "closed",
+    "section": "ANCHOR.md 1.0",
+    "reason": "The anchor sentence has no named person. Under constraint 1, no build action past Step 0 is permitted.",
+    "action": "Fill ANCHOR.md Section 1.0 with a real human you can message today.",
+    "publishedClosedDeliberately": true
+  },
+  "bands": [
+    {
+      "id": "prototype",
+      "name": "Prototype",
+      "signal": "A reaction from one named person",
+      "state": "current",
+      "gateNote": "Quarantined metrics cannot clear this gate."
+    },
+    {
+      "id": "mvp",
+      "name": "MVP",
+      "signal": "Someone other than the operator filled in an anchor, used it across two sessions, and returned with a specific complaint",
+      "state": "locked",
+      "gateNote": "A compliment does not clear this. Only a complaint proves the artefact was used."
+    },
+    {
+      "id": "v1",
+      "name": "v1",
+      "signal": "Used on a second project by someone else, or paid for",
+      "state": "locked",
+      "gateNote": ""
+    }
+  ],
+  "quarantinedMetrics": [
+    "GitHub stars",
+    "Forks",
+    "Page traffic",
+    "Followers",
+    "Newsletter signups"
+  ],
+  "items": [
+    {
+      "id": "gate-00",
+      "name": "Fill the front gate",
+      "brief": "ANCHOR.md Section 1.0 needs a real named person, a result in their world, and an externally generated signal.",
+      "category": "gate",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [
+        "gate-05",
+        "launch-01"
+      ],
+      "notes": "Published closed on purpose. A governance methodology that waives its own front gate has lost the argument before it starts. Operator action only — an agent must not fill this in."
+    },
+    {
+      "id": "launch-01",
+      "name": "Create the org and publish",
+      "brief": "Pick an available GitHub organisation name, create it, push the bundle, enable Issues, Discussions, and Pages.",
+      "category": "launch",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "gate-00",
+        "decide-01"
+      ],
+      "blocks": [
+        "launch-02",
+        "launch-03",
+        "surface-04",
+        "surface-05",
+        "var-atlas",
+        "var-contractor",
+        "var-research",
+        "var-shortform",
+        "var-suzerain"
+      ],
+      "notes": "The DriftGuard org is taken. Check org availability first, not last."
+    },
+    {
+      "id": "launch-02",
+      "name": "Resolve the Scope Lock verification",
+      "brief": "Confirm the tool exists, its licence, and its state — or remove the named recommendation from all public copy.",
+      "category": "launch",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [
+        "var-scopelock"
+      ],
+      "notes": "UNVERIFIED as of 2026-07-31. Constraint 9 requires a source and a verification date for every public claim about another project. A 404 on launch day costs more than the recommendation is worth."
+    },
+    {
+      "id": "launch-03",
+      "name": "Stand up feedback intake",
+      "brief": "Pinned discussion, 90-second form, booking link for watch-me-try-it sessions, feedback folder, analytics.",
+      "category": "launch",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [
+        "outreach-01"
+      ],
+      "notes": "The booking link is the highest-value item and the most likely to be skipped. Watching someone struggle with your own artefact is uncomfortable; that is the point."
+    },
+    {
+      "id": "outreach-01",
+      "name": "Reach 5–15 named people individually",
+      "brief": "Individual messages, not a broadcast. Three or more observed attempting to fill an anchor. Log every stall.",
+      "category": "launch",
+      "status": "blocked",
+      "band": "mvp",
+      "priority": "high",
+      "blockedBy": [
+        "launch-03"
+      ],
+      "blocks": [
+        "comm-07",
+        "register-01"
+      ],
+      "notes": "A post to a feed is not this item."
+    },
+    {
+      "id": "register-01",
+      "name": "Non-technical register pass",
+      "brief": "Rewrite templates against observed stall points, not against a general intuition that it should be simpler.",
+      "category": "launch",
+      "status": "blocked",
+      "band": "mvp",
+      "priority": "high",
+      "blockedBy": [
+        "outreach-01"
+      ],
+      "blocks": [
+        "decide-02"
+      ],
+      "notes": "Constraint 2 governs: only change what someone was observed to stumble over. The register gap is named openly in ANCHOR.md 1.4 as the known weak point."
+    },
+    {
+      "id": "decide-01",
+      "name": "Choose the GitHub org name",
+      "brief": "Apply the five criteria in docs/NAMING.md. Org availability checked first.",
+      "category": "decision",
+      "status": "not-started",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [
+        "launch-01"
+      ],
+      "notes": "Not the product rename — that is a separate operation at Step 7, between the MVP and v1 gates."
+    },
+    {
+      "id": "decide-02",
+      "name": "Product rename",
+      "brief": "Full rename: two find-and-replace commands, org transfer, external listings updated, provisional note removed.",
+      "category": "decision",
+      "status": "blocked",
+      "band": "v1",
+      "priority": "medium",
+      "blockedBy": [
+        "register-01"
+      ],
+      "blocks": [
+        "var-capture"
+      ],
+      "notes": "Between the MVP and v1 gates is the cheapest moment. Earlier renames something unproven; later breaks links that matter."
+    },
+    {
+      "id": "decide-03",
+      "name": "Pricing decision",
+      "brief": "Lock pricing and record it as a NEW appended anchor section, per constraint 10.",
+      "category": "decision",
+      "status": "blocked",
+      "band": "v1",
+      "priority": "low",
+      "blockedBy": [
+        "var-capture"
+      ],
+      "blocks": [],
+      "notes": "Do not edit Section 6. Append."
+    },
+    {
+      "id": "surface-01",
+      "name": "Master README",
+      "brief": "The landing page, the whole marketing surface, and the only thing most people will read.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "v4. Rewritten in Karpathy register: quick start before philosophy, real paste-able anchor and prompt blocks, a before/after exchange showing the invented-reason failure, annotated file tree, lowercase headers, late 'repo' section with merge/reject examples. Plain-English pass throughout; GLOSSARY.md added for the non-technical reader. Contains Abumaude placeholders — see BUILD_INSTRUCTIONS Step 1 for the command."
+    },
+    {
+      "id": "surface-02",
+      "name": "Public dashboard",
+      "brief": "docs/index.html — what this is, the variant library, live repo status, how to start.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Single file, no build step, works from file://. Reads docs/data/*.json only — no network calls to any API, per design principle 6. Hero and section copy realigned to the README register; before/after transcript section added."
+    },
+    {
+      "id": "surface-03",
+      "name": "Build tracker",
+      "brief": "docs/tracker.html — band state, gate state, every item and what blocks it.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Reads this file. To change what it shows, edit the JSON, not the markup."
+    },
+    {
+      "id": "surface-04",
+      "name": "Long-form origin post",
+      "brief": "Twenty things built, none shipped, and what changed.",
+      "category": "surface",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "The strongest asset the project has, because it is the one thing no competitor can copy."
+    },
+    {
+      "id": "surface-05",
+      "name": "Social preview image",
+      "brief": "One PNG per repo — the OG image shown wherever the URL is pasted.",
+      "category": "surface",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Its absence is conspicuous. Roughly fifteen minutes per repo."
+    },
+    {
+      "id": "res-01",
+      "name": "July pre-launch scan",
+      "brief": "Re-verified every load-bearing claim in the May positioning. Three retired.",
+      "category": "research",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [
+        "res-02"
+      ],
+      "notes": "docs/RESEARCH_LOG.md. Spec Kit shipped /speckit.constitution and /speckit.converge; the Anthropic billing split was cancelled; the org name is taken."
+    },
+    {
+      "id": "res-02",
+      "name": "Positioning delta and rebuttal kit",
+      "brief": "New frame — concede first, then narrow to the seams. Eight rehearsed objections with honest answers.",
+      "category": "research",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "res-01"
+      ],
+      "blocks": [],
+      "notes": "docs/POSITIONING.md. Includes what would change the strategy, so a future session can tell a real signal from a bad week."
+    },
+    {
+      "id": "res-03",
+      "name": "Unattended-mode provision (template v2)",
+      "brief": "Optional watcher for unattended runs, seeded from the repo, constrained to memory-grounded reminders.",
+      "category": "research",
+      "status": "parked",
+      "band": "v1",
+      "priority": "low",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Captured, not built. Harness-layer. Any driftguard-watcher variant impulse is the architect's trap in a lab coat."
+    },
+    {
+      "id": "var-research",
+      "name": "variant-research",
+      "brief": "Research projects — sources, claims, synthesis. Dual mode: researcher and supervisor.",
+      "category": "variant",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Anchor and build pair complete. Awaiting repo publication."
+    },
+    {
+      "id": "var-contractor",
+      "name": "variant-contractor-handoff",
+      "brief": "Handing an AI-started build to a human contractor.",
+      "category": "variant",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Strongest differentiator from Spec Kit — multi-operator delegation is outside its scope entirely."
+    },
+    {
+      "id": "var-shortform",
+      "name": "variant-shortform-video",
+      "brief": "A short-form video channel as a governed pipeline.",
+      "category": "variant",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "low",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Non-engineering domain — useful evidence for the any-domain claim."
+    },
+    {
+      "id": "var-courseware",
+      "name": "variant-courseware",
+      "brief": "Course and curriculum builds.",
+      "category": "variant",
+      "status": "in-progress",
+      "band": "mvp",
+      "priority": "low",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "~80%. Section 13 cleanup pending. Do not publish until complete — a link to a partial repo costs more than a missing row."
+    },
+    {
+      "id": "var-atlas",
+      "name": "atlas",
+      "brief": "Operator infrastructure: portfolio catalogue across 8+ repos.",
+      "category": "variant",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "low",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Publish marked clearly as operator infrastructure, not the starting point."
+    },
+    {
+      "id": "var-suzerain",
+      "name": "suzerain",
+      "brief": "Operator infrastructure: cross-repo and lineage governance.",
+      "category": "variant",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "low",
+      "blockedBy": [
+        "launch-01"
+      ],
+      "blocks": [],
+      "notes": "Same treatment as atlas."
+    },
+    {
+      "id": "var-capture",
+      "name": "capture-plugin (the wedge)",
+      "brief": "Browser capture into a governed repo — the wedge MVP.",
+      "category": "variant",
+      "status": "blocked",
+      "band": "v1",
+      "priority": "high",
+      "blockedBy": [
+        "decide-02"
+      ],
+      "blocks": [
+        "decide-03"
+      ],
+      "notes": "Has its own anchor, build file, and feature tracker in its own repo. Gated behind the MVP proof gate; do not start early."
+    },
+    {
+      "id": "var-scopelock",
+      "name": "scope-lock-bridge",
+      "brief": "Adapter between project-level governance and task-level scope enforcement.",
+      "category": "variant",
+      "status": "parked",
+      "band": "v1",
+      "priority": "low",
+      "blockedBy": [
+        "launch-02"
+      ],
+      "blocks": [],
+      "notes": "Parked pending the Scope Lock verification. Restore to queued if the tool is confirmed."
+    },
+    {
+      "id": "comm-01",
+      "name": "Ship the commercial trust layer as a resource",
+      "brief": "commercial/ published verbatim for repo users to adopt in whole, in part, or not at all.",
+      "category": "decision",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [
+        "comm-02",
+        "comm-03",
+        "comm-08"
+      ],
+      "notes": "ANCHOR Section 7 records it as an included resource, not binding law. Constraints 1-11 unchanged."
+    },
+    {
+      "id": "comm-02",
+      "name": "Fill the evidence ledger",
+      "brief": "Every material public claim from the README and dashboard tiered, sourced, and limited.",
+      "category": "research",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "comm-01"
+      ],
+      "blocks": [
+        "comm-04"
+      ],
+      "notes": "14 claims. 3 QUARANTINED (two unsourced comparison rows, one withdrawn time-to-value figure), 1 VERIFY, 1 DERIVED, rest CONFIRMED. Plus a synthetic-examples register."
+    },
+    {
+      "id": "comm-03",
+      "name": "Publish the honest box",
+      "brief": "HONEST_BOX.md at repo root, linked from the README masthead and the dashboard.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [
+        "comm-01"
+      ],
+      "blocks": [
+        "comm-04"
+      ],
+      "notes": "Leads its 'do not adopt' list with the most common use case, sent to a competitor. Anti-theatre test run 2026-07-31."
+    },
+    {
+      "id": "comm-04",
+      "name": "Run the pre-ship governance checklist",
+      "brief": "Full checklist against the README and public dashboard, with failures recorded before passes.",
+      "category": "research",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "comm-02",
+        "comm-03"
+      ],
+      "blocks": [],
+      "notes": "3 fails found and corrected: unlabelled synthetic example, unmeasured performance claim, internal review implying independence. All three survived the earlier 36-defect adversarial pass — different class of defect."
+    },
+    {
+      "id": "comm-05",
+      "name": "Source or cut the two quarantined comparison rows",
+      "brief": "Anthropic 'goal drift' and shadcn 'what drifted' rows remain unsourced on three public surfaces.",
+      "category": "research",
+      "status": "not-started",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "BLOCKING before the long-form post and thread, not before the repo goes public — marking is visible and honest, but a post amplifies. CLAIM-010, CLAIM-011. Cut both or source both."
+    },
+    {
+      "id": "comm-07",
+      "name": "Restore a real time-to-value figure",
+      "brief": "The 'twenty minutes' estimate was withdrawn; a measured number returns once a first run is timed.",
+      "category": "research",
+      "status": "blocked",
+      "band": "mvp",
+      "priority": "medium",
+      "blockedBy": [
+        "outreach-01"
+      ],
+      "blocks": [],
+      "notes": "CLAIM-002. The watch-me-try-it sessions in Step 5 are where this gets measured rather than estimated."
+    },
+    {
+      "id": "comm-08",
+      "name": "Write the commercial layer usage guide",
+      "brief": "commercial/HOW_TO_USE.md — the five rhythms, the paste-able prompts, the two gates, and the condition for cutting the layer.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [
+        "comm-01"
+      ],
+      "blocks": [],
+      "notes": "Written because the layer is nine files that mostly do nothing until publish time, and that is the part nobody infers from the templates. Frames them as checkpoints rather than documents to complete."
+    },
+    {
+      "id": "surface-06",
+      "name": "Operating manual",
+      "brief": "docs/OPERATING_MANUAL.md — which files get touched, when, the session prompts, and what not to do.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Written because the file set with no usage order is its own kind of drift. Sorts the repo by reader — stranger, operator, agent — which is the thing the file list does not convey."
+    },
+    {
+      "id": "gate-05",
+      "name": "Process walkthrough (closed-loop gate)",
+      "brief": "Draw the launch process, walk every actor end to end, close the two known dead ends in the spec before Step 1.",
+      "category": "gate",
+      "status": "blocked",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [
+        "gate-00"
+      ],
+      "blocks": [],
+      "notes": "BUILD Step 0.5, operator_review: required. Two dead ends already found and recorded in ANCHOR 8.4 — issue filers and PR authors enter an untracked queue with no stated outcome path. Fixed in CONTRIBUTING and the issue templates; confirm at the walkthrough."
+    },
+    {
+      "id": "comm-09",
+      "name": "Adopt the closed-loop gate",
+      "brief": "RULING_closed-loop-gate-v1 applied to both templates, this anchor, the worked example, and the checklist.",
+      "category": "decision",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "critical",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Ratified 2026-08-22. Actor loop closure table in every anchor, walkthrough gate before every build, NO DEAD ENDS in every checklist. Numbered Step 0.5 here because Step 0 is the ship-or-drift front gate; reconciliation recorded in ANCHOR Section 8.2."
+    },
+    {
+      "id": "comm-10",
+      "name": "Consent check on the origin case",
+      "brief": "The README describes a member's failed build, anonymised. Ask before publishing.",
+      "category": "research",
+      "status": "not-started",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "CLAIM-015, tier VERIFY. A repo whose constitution requires explicit permission for testimonials should not describe somebody's failure on its front page without asking, even without identifying details."
+    },
+    {
+      "id": "surface-07",
+      "name": "Agent entry points",
+      "brief": "CLAUDE.md and AGENTS.md so any agent opening the repo knows the rules without being told.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "medium",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "CLAUDE.md is read automatically by Claude Code and carries the first-publish steps plus the four rules most likely to be broken. AGENTS.md serves every other agent convention."
+    },
+    {
+      "id": "surface-08",
+      "name": "Pre-push verifier",
+      "brief": "scripts/verify.sh — tracker graph, seed drift, relative links, dashboard isolation, and derived counts typed into prose.",
+      "category": "surface",
+      "status": "complete",
+      "band": "prototype",
+      "priority": "high",
+      "blockedBy": [],
+      "blocks": [],
+      "notes": "Written after a hand-typed '2 actionable items and 12 blocked ones' survived an adversarial review, a commercial governance pass, and two further edits while the real numbers were 3 and 13. The lesson was not to be more careful — a derived number in prose always drifts — so the check is mechanical and fails the build."
+    }
+  ],
+  "statusRule": "An item is 'blocked' when any item in its blockedBy is not complete (gate-00 is blocked by an external precondition: operator input). Otherwise 'not-started'. complete / in-progress / parked / retired are set by hand. 'blocks' is derived from every other item's blockedBy — never edit it directly."
+}
