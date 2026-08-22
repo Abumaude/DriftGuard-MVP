@@ -8,11 +8,54 @@ That's it. It's markdown in your repo. Any AI can read it — Claude Code, Curso
 
 > **On the name.** DriftGuard is provisional. Three unrelated products already use it, one of which holds the `DriftGuard` GitHub org. A rename is planned and costs one find-and-replace. See [`docs/NAMING.md`](docs/NAMING.md).
 
-> **Status: alpha, published July 2026.** Unproven, free, MIT. Its own front gate is currently **closed** - see [the gate is closed](#the-gate-is-closed), which is either the most convincing thing here or the least, depending on your temperament.
+> **Status: alpha.** Unproven, free, MIT. Its own front gate is currently **closed** - see [the gate is closed](#the-gate-is-closed), which is either the most convincing thing here or the least, depending on your temperament.
 
 Free, MIT, no email capture, no account, no gated download, no upsell, and no analytics in the repo. Before you spend time on it, read [**what it does not do and who should not use it**](HONEST_BOX.md) — including the case where you should use a competitor instead.
 
 **[dashboard](https://abumaude.github.io/DriftGuard-MVP/) · [tracker](https://abumaude.github.io/DriftGuard-MVP/tracker.html) · [templates](templates/) · [worked example](examples/worked-example/) · [honest box](HONEST_BOX.md) · [glossary](GLOSSARY.md) · [research log](docs/RESEARCH_LOG.md)**
+
+---
+
+## what you'll actually notice
+
+Not much, on day one. The change shows up in week three, and it looks like this.
+
+**Both exchanges below are constructed illustrations, not transcripts.** I haven't logged a real session in this form, and a made-up example that reads like evidence is precisely the thing this project claims to be against. The failure pattern is annoyingly frustrating and I've hit it repeatedly; these two specific exchanges never happened.
+
+**Before**, three weeks in:
+
+> **You:** why does the auth flow block requests from the same IP twice in a row?
+> **AI:** That's a standard rate-limiting pattern to prevent brute-force attacks. It's good practice to keep it.
+
+That's a confident, plausible, completely invented answer. The real reason was a payment-provider sandbox limit you hit in week one and worked around. Four days later you remove the "rate limiting", payments break, you roll back, the rollback undoes something else, and you're managing the codebase instead of building it.
+
+**After**, same question, same three weeks:
+
+> **You:** why does the auth flow block requests from the same IP twice in a row?
+> **AI:** ANCHOR.md Section 4 records this: the payment sandbox rejects duplicate
+> calls within 2s from one IP (logged 2026-06-14, see state/use-ledger.md).
+> The block is a workaround for that, not rate limiting. Removing it will break
+> checkout in the sandbox.
+
+Same model. Same question. The difference is that the answer had somewhere to come from.
+
+Take the *shape* of the failure from that, not a performance claim. Nobody has measured how often it happens or how reliably an anchor prevents it, and until somebody has, I'm not going to imply the measurement exists.
+
+### the same failure, wearing other clothes
+
+The invented-reason answer is one costume. The underlying failure — decisions happening faster than they get recorded, and the AI not knowing why anything was decided — turns up in several others:
+
+**You become your own continuity layer.** Ten half-finished chats, and the only thing connecting them is you — bookmarks, mental notes, re-reading last week's thread to work out what you were doing. That's an unpaid job, and you do it every day.
+
+**The handoff that takes three days.** You bring in a contractor to finish what the AI started. They open the project and have no idea what's going on, and half the onboarding is you reconstructing decisions you never wrote down.
+
+**The sixteen-document skim.** You paste a pile of documents, the AI synthesises confidently, and you find out later that several were skimmed and key content missed — with no way to have known at the time.
+
+**Agreement that compounds.** The AI agrees too readily. A bad decision gets built on, and by the time consequences appear it's buried under five layers of dependent choices. The use ledger exists for exactly this: it records what failed, not only what was decided.
+
+**Three tools, three silos.** One conversation in Claude, another in ChatGPT, a third in Gemini — and none of them knows about the others. A file in a repo is the one thing all three can read.
+
+Every one of these is a re-explaining problem. The anchor is the file you stop re-explaining from.
 
 ---
 
@@ -55,31 +98,6 @@ Then run Step 0.
 
 That's the whole install. You don't need to add any packages, learn CLI or setup via various paths nor need an account.
 
-### what you'll actually notice
-
-Not much, on day one. The change shows up in week three, and it looks like this.
-
-**Both exchanges below are constructed illustrations, not transcripts.** I haven't logged a real session in this form, and a made-up example that reads like evidence is precisely the thing this project claims to be against. The failure pattern is annoyingly frustrating and I've hit it repeatedly; these two specific exchanges never happened.
-
-**Before**, three weeks in:
-
-> **You:** why does the auth flow block requests from the same IP twice in a row?
-> **AI:** That's a standard rate-limiting pattern to prevent brute-force attacks. It's good practice to keep it.
-
-That's a confident, plausible, completely invented answer. The real reason was a payment-provider sandbox limit you hit in week one and worked around. Four days later you remove the "rate limiting", payments break, you roll back, the rollback undoes something else, and you're managing the codebase instead of building it.
-
-**After**, same question, same three weeks:
-
-> **You:** why does the auth flow block requests from the same IP twice in a row?
-> **AI:** ANCHOR.md Section 4 records this: the payment sandbox rejects duplicate
-> calls within 2s from one IP (logged 2026-06-14, see state/use-ledger.md).
-> The block is a workaround for that, not rate limiting. Removing it will break
-> checkout in the sandbox.
-
-Same model. Same question. The difference is that the answer had somewhere to come from.
-
-Take the *shape* of the failure from that, not a performance claim. Nobody has measured how often it happens or how reliably an anchor prevents it, and until somebody has, I'm not going to imply the measurement exists.
-
 ### quick start (I don't use git and I'm not a developer)
 
 You can still use this, and honestly a lot of the value survives.
@@ -104,70 +122,6 @@ It grows by *adding sections*. You never edit or delete an existing one. If a de
 
 There's a fourth file that isn't required but earns its place fast: `state/use-ledger.md`, an append-only log of what you tried, what failed, and what you skipped. The anchor holds what's true; the ledger holds what happened. Six months later that distinction is the difference between "why is it like this?" and knowing.
 
-### draw it before you build it
-
-One gate runs before any code gets written, and it is the cheapest thing in the method.
-
-List every actor who can change the state of your system. For each one, answer four things: what they do, what changes, **how they learn the outcome**, and where they go to check. Then draw the whole process and walk each journey end to end. Any journey that ends without the actor finding out what happened is a missing feature — and you fix it in the spec, not in the code.
-
-Here is the failure it catches, from the case that produced the rule. A member's app: users submit something, an admin approves it. Submission worked. Approval worked. Both passed every test written for them. The submitter had no way to learn what had been decided. Nobody noticed for hours of building, because **an omission contradicts nothing** — there is no failing test for a step that was never specified. Only walking the whole journey surfaces it, and a drawing surfaces it in minutes.
-
-The check re-runs after every build step rather than only at the start, since a new feature can open a new dead end. By default a human approves the drawing before building begins; you can set it to self-check instead, but a dead end halts the build either way.
-
-Applying it to *this* repo found two of them, written up in [`ANCHOR.md`](ANCHOR.md) Section 8.4. The worked example found a worse one — an MVP proof gate that depended on a signal the operator had no way to detect. Both are left in place rather than quietly fixed, because a gate that catches something on its first run is better evidence than one that catches nothing.
-
-Full rule: [`docs/RULING_closed-loop-gate-v1.md`](docs/RULING_closed-loop-gate-v1.md).
-
----
-
-## the files
-
-```
-your-project/
-├── ANCHOR.md               the constitution. read always, edit never.
-├── BUILD_INSTRUCTIONS.md   the sequence. read this first, every session.
-├── AGENTS.md               optional: points agents at the two files above
-└── state/
-    └── use-ledger.md       what was tried, what failed, what was skipped
-```
-
-And this repo, which is the methodology plus its own governance:
-
-```
-.
-├── README.md               this file — the whole marketing surface
-├── ANCHOR.md               DriftGuard's own anchor. gate currently CLOSED.
-├── BUILD_INSTRUCTIONS.md   the launch sequence, nine steps
-├── AGENTS.md               instructions for AI agents working in here
-├── CLAUDE.md               same, for Claude Code — it reads this automatically
-├── GLOSSARY.md             every term on this page, in plain English
-├── HONEST_BOX.md           what it does not do, and who should not use it
-├── CONTRIBUTING.md         what I'll merge and what I won't
-├── commercial/             the trust layer — start at HOW_TO_USE.md, then the
-│                           constitution, evidence ledger, product + funnel
-│                           profiles, and the dated pre-ship checklist runs
-├── scripts/verify.sh       pre-push checks: graph, seed drift, links, stale counts
-├── templates/              the two blank files you actually came for
-├── examples/
-│   └── worked-example/     a filled pair for a newsletter. deliberately not code.
-├── state/
-│   └── use-ledger.md       this project's own ledger
-└── docs/
-    ├── index.html          public dashboard (single file, no build step)
-    ├── tracker.html        build tracker (reads data/tracker.json)
-    ├── data/               tracker.json, variants.json — edit data, not markup
-    ├── RESEARCH_LOG.md     sector observations, with verification dates
-    ├── POSITIONING.md      the competitive delta + eight rehearsed objections
-    ├── NAMING.md           three name collisions and the rename procedure
-    ├── OPERATING_MANUAL.md  how to run this repo day to day — start here
-    ├── RULING_closed-loop-gate-v1.md  draw the process before you build
-    ├── LAUNCH_CHECKLIST.md the operational sequence
-    ├── METHOD_repo-intro-register.md  the house style for every README here
-    └── FAQ.md              the questions this actually gets
-```
-
-Every term above that isn't obvious is in [`GLOSSARY.md`](GLOSSARY.md), one line each, plain English. If you don't know what a repo is, start there — that's not a joke and you're not the only one.
-
 ---
 
 ## why this exists
@@ -179,6 +133,20 @@ Not for lack of output — the output was the problem. Twenty variants, six desi
 Underneath the avoidance was a real failure though. Every project drifted. Decisions made in week one got contradicted in week three. New chats forgot old constraints. The AI confidently invented reasons for choices it no longer remembered making. I wasn't managing projects; I was re-explaining them, over and over, to a collaborator with no memory and enormous confidence.
 
 DriftGuard is the system I built to stop re-explaining. It isn't an app. It's a way of working — and the repo you're reading runs on it.
+
+It has already caught this project drifting. Early on I let an AI write chat links into a file from memory instead of retrieving them, and they were wrong — plausible, well-formed, and pointing nowhere. "Retrieve, never reconstruct" is now a standing rule here, and the incident stays in the record rather than getting quietly tidied away. A governance method that hides its own drift is selling something else.
+
+---
+
+## the gate is closed
+
+This repo governs itself with its own methodology, which means publishing the parts that aren't finished.
+
+[`ANCHOR.md`](ANCHOR.md) Section 1.0 requires a named person — a real human you can message this afternoon — before any build action is permitted. That slot is empty. So the gate is closed, almost everything on the [tracker](https://abumaude.github.io/DriftGuard-MVP/tracker.html) is blocked behind it, and the launch sequence formally cannot proceed. The tracker renders those counts from committed data; this page deliberately does not restate them, because a hand-typed number goes stale the first time an item is added and nobody notices.
+
+I published it that way on purpose. A governance methodology that quietly waives its own front gate has lost the argument before anyone reads the README, and a closed gate demonstrates the mechanism better than any paragraph describing it could.
+
+It's also the rule I most want to bend, which is roughly how you know it's the right rule. "Alpha testers" would let me through. "Solo founders building with AI" would let me through. Neither can reject me, and that's the whole point of the constraint — a demographic can't say no to your face and a person can.
 
 ---
 
@@ -249,15 +217,69 @@ And none of that touches the case this project is actually about, which starts a
 
 ---
 
-## the gate is closed
+## draw it before you build it
 
-This repo governs itself with its own methodology, which means publishing the parts that aren't finished.
+One gate runs before any code gets written, and it is the cheapest thing in the method.
 
-[`ANCHOR.md`](ANCHOR.md) Section 1.0 requires a named person — a real human you can message this afternoon — before any build action is permitted. That slot is empty. So the gate is closed, almost everything on the [tracker](https://abumaude.github.io/DriftGuard-MVP/tracker.html) is blocked behind it, and the launch sequence formally cannot proceed. The tracker renders those counts from committed data; this page deliberately does not restate them, because a hand-typed number goes stale the first time an item is added and nobody notices.
+List every actor who can change the state of your system. For each one, answer four things: what they do, what changes, **how they learn the outcome**, and where they go to check. Then draw the whole process and walk each journey end to end. Any journey that ends without the actor finding out what happened is a missing feature — and you fix it in the spec, not in the code.
 
-I published it that way on purpose. A governance methodology that quietly waives its own front gate has lost the argument before anyone reads the README, and a closed gate demonstrates the mechanism better than any paragraph describing it could.
+Here is the failure it catches, from the case that produced the rule. A member's app: users submit something, an admin approves it. Submission worked. Approval worked. Both passed every test written for them. The submitter had no way to learn what had been decided. Nobody noticed for hours of building, because **an omission contradicts nothing** — there is no failing test for a step that was never specified. Only walking the whole journey surfaces it, and a drawing surfaces it in minutes.
 
-It's also the rule I most want to bend, which is roughly how you know it's the right rule. "Alpha testers" would let me through. "Solo founders building with AI" would let me through. Neither can reject me, and that's the whole point of the constraint — a demographic can't say no to your face and a person can.
+The check re-runs after every build step rather than only at the start, since a new feature can open a new dead end. By default a human approves the drawing before building begins; you can set it to self-check instead, but a dead end halts the build either way.
+
+Applying it to *this* repo found two of them, written up in [`ANCHOR.md`](ANCHOR.md) Section 8.4. The worked example found a worse one — an MVP proof gate that depended on a signal the operator had no way to detect. Both are left in place rather than quietly fixed, because a gate that catches something on its first run is better evidence than one that catches nothing.
+
+Full rule: [`docs/RULING_closed-loop-gate-v1.md`](docs/RULING_closed-loop-gate-v1.md).
+
+---
+
+## the files
+
+```
+your-project/
+├── ANCHOR.md               the constitution. read always, edit never.
+├── BUILD_INSTRUCTIONS.md   the sequence. read this first, every session.
+├── AGENTS.md               optional: points agents at the two files above
+└── state/
+    └── use-ledger.md       what was tried, what failed, what was skipped
+```
+
+And this repo, which is the methodology plus its own governance:
+
+```
+.
+├── README.md               this file — the whole marketing surface
+├── ANCHOR.md               DriftGuard's own anchor. gate currently CLOSED.
+├── BUILD_INSTRUCTIONS.md   the launch sequence, nine steps
+├── AGENTS.md               instructions for AI agents working in here
+├── CLAUDE.md               same, for Claude Code — it reads this automatically
+├── GLOSSARY.md             every term on this page, in plain English
+├── HONEST_BOX.md           what it does not do, and who should not use it
+├── CONTRIBUTING.md         what I'll merge and what I won't
+├── commercial/             the trust layer — start at HOW_TO_USE.md, then the
+│                           constitution, evidence ledger, product + funnel
+│                           profiles, and the dated pre-ship checklist runs
+├── scripts/verify.sh       pre-push checks: graph, seed drift, links, stale counts
+├── templates/              the two blank files you actually came for
+├── examples/
+│   └── worked-example/     a filled pair for a newsletter. deliberately not code.
+├── state/
+│   └── use-ledger.md       this project's own ledger
+└── docs/
+    ├── index.html          public dashboard (single file, no build step)
+    ├── tracker.html        build tracker (reads data/tracker.json)
+    ├── data/               tracker.json, variants.json — edit data, not markup
+    ├── RESEARCH_LOG.md     sector observations, with verification dates
+    ├── POSITIONING.md      the competitive delta + eight rehearsed objections
+    ├── NAMING.md           three name collisions and the rename procedure
+    ├── OPERATING_MANUAL.md  how to run this repo day to day — start here
+    ├── RULING_closed-loop-gate-v1.md  draw the process before you build
+    ├── LAUNCH_CHECKLIST.md the operational sequence
+    ├── METHOD_repo-intro-register.md  the house style for every README here
+    └── FAQ.md              the questions this actually gets
+```
+
+Every term above that isn't obvious is in [`GLOSSARY.md`](GLOSSARY.md), one line each, plain English. If you don't know what a repo is, start there — that's not a joke and you're not the only one.
 
 ---
 
