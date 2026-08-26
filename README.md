@@ -124,6 +124,8 @@ It grows by *adding sections*. You never edit or delete an existing one. If a de
 
 **`BUILD_INSTRUCTIONS.md` is the sequence.** Which part of the anchor to load at each step, so you never dump the whole thing into context and get it skimmed. Each step names its model, its inputs, how to check the work, and what to commit. It ends with a copy-paste prompt for the next session, which sounds trivial and is the reason people actually keep using it.
 
+There's a cost reason for that routing rule too. An agent re-sends the whole conversation on every message, so anything loaded at step one is carried again at every step after it. Loading two sections instead of the whole anchor is cheaper on every later turn, which is why the rule survives even for people who don't care about governance. ([Claude Code's prompt-caching docs](https://code.claude.com/docs/en/prompt-caching) describe the mechanism; checked 2026-08-26.)
+
 **Git is the memory.** State lives in the repo, not in a chat window and not on one laptop. It survives a wiped machine, a switched tool, a provider outage, and someone else picking the work up cold.
 
 There's a fourth file that isn't required but earns its place fast: `state/use-ledger.md`, an append-only log of what you tried, what failed, and what you skipped. The anchor holds what's true; the ledger holds what happened. Six months later that distinction is the difference between "why is it like this?" and knowing.
@@ -170,13 +172,55 @@ Everyone is now using drift language and they all mean something different by it
 
 | who | their word | their scope |
 |---|---|---|
-| Anthropic | goal drift | an agent losing the plot **within one long task** |
+| Arike, Donoway, Bartsch & Hobbhahn (2025) | goal drift | an agent losing the plot **within one long task** |
 | Meta (Wu et al.) | behavioral state decay | requirements still in context but no longer shaping action, **within one session** |
 | shadcn `improve` | what drifted | plan items going stale **within one repo, between sessions** |
 | GitHub `/speckit.converge` | convergence | codebase diverging from spec, **within one repo** |
 | **DriftGuard** | **drift** | **decisions not surviving across repos, sessions, tools, operators, and non-code domains** |
 
-Three of those five rows were verified on 2026-07-31. The Anthropic and shadcn rows were carried over from an earlier draft and are marked **unverified** in the [research log](docs/RESEARCH_LOG.md) until I've cited their primary sources. Recording the gap rather than quietly closing it is the same discipline this page is arguing for, so it stays visible.
+All five rows were checked on 2026-08-26. The first row was previously credited to Anthropic; the term comes from a 2025 technical report by [Arike, Donoway, Bartsch and Hobbhahn](https://arxiv.org/abs/2505.02709), not from Anthropic, and the [shadcn `improve`](https://github.com/shadcn/improve) row is confirmed against its README. The wrong attribution stays in the [research log](docs/RESEARCH_LOG.md) rather than being quietly tidied away, which is the same discipline this page is arguing for.
+
+### if you searched for something else and landed here
+
+Three other products are called DriftGuard, so a search for the name mostly finds a gamepad utility and two monitoring tools. That's on me and a rename is planned. In the meantime, here is what people are usually looking for when this is the right answer.
+
+You're probably in the right place if you'd say any of these:
+
+- "the AI forgets the decisions we made last session"
+- "I didn't lose the chat, I lost the decisions"
+- "silent architectural drift" — it looked fine, then it didn't
+- "split brain: one tool reads CLAUDE.md, another reads AGENTS.md, they disagree"
+- "the agent gets dumber the longer the session runs"
+- "everything held together until week two or three"
+- "I handed it to someone else and the *why* didn't come with it"
+- "CLAUDE.md template" or "AGENTS.md example" for a project that isn't only code
+- "spec-driven development, but I'm not a developer"
+
+You're in the wrong place if you want a tool that makes one agent faster inside one session, or a memory feature inside one provider's API. See [use something else if](#use-something-else-if).
+
+#### why does the AI forget the decisions I made last session?
+
+Because nothing carried them over. Every new session starts from whatever is on disk plus whatever you paste in. If the reason for a decision only ever lived in a chat, it's gone, and the model fills the gap with a plausible guess. The fix isn't a smarter model; it's a file the model reads first and can't rewrite. That file is `ANCHOR.md`.
+
+#### is this a CLAUDE.md template?
+
+Close. `CLAUDE.md` and `AGENTS.md` are one-tool entry points, and tools disagree about which one to read. DriftGuard's two files are what both entry points point at. This repo ships both, and they say the same thing: read `BUILD_INSTRUCTIONS.md`, then the anchor sections it names. Any tool that reads markdown gets the same rules, so there's no split brain to have.
+
+#### is this spec-driven development?
+
+It borrows the vocabulary and sits one level above it. Spec-driven development (Spec Kit, Kiro, and others) governs one codebase with one agent. DriftGuard governs the decisions that have to survive across repos, sessions weeks apart, a change of tool, or a handoff to a person — and projects that aren't code.
+
+#### how do I hand the project to another person or tool without losing the reasons?
+
+Give them the repo. The anchor holds what's true and why; the use ledger holds what was tried and failed. A contractor, a different model, or you-in-three-months reads the same two files and starts from the same place. There's a variant for the contractor case specifically; see [the variant library](#the-variant-library).
+
+#### is this the Karpathy method?
+
+His framing describes it well: a detailed *spec* the agent works from, a *verifier* that decides whether the work is done, and an *environment* the agent lives in. Here the spec is `ANCHOR.md`, the verifier is the check on every build step plus a named person whose behaviour is the real test, and the environment is the repo. The packaging into three named layers comes from commentators, not from him, and I haven't asked him what he thinks of any of this.
+
+#### does it save tokens?
+
+As a side effect, yes. Claude Code re-sends the whole conversation on every message and caches the part that didn't change, so anything you load early is carried on every turn after it, and switching model or effort mid-session throws the cache away and re-bills everything ([Anthropic's own page on this](https://code.claude.com/docs/en/prompt-caching), checked 2026-08-26). "Load only the sections this step needs," "one step per session," and "pick your model at the start" exist here for governance reasons. They happen to be the same rules Anthropic gives for keeping cost down.
 
 ### use something else if
 
@@ -194,9 +238,9 @@ A *harness* is software that wraps a model's API so it can run programmatically 
 
 DriftGuard makes zero API calls. It's markdown with a protocol any tool reads. Use it with Claude Code, Cursor, OpenClaw, a chat window, a local model, or a person.
 
-That distinction earned its keep in June 2026. Anthropic announced on 14 May that programmatic usage would move to a separate metered credit pool at API rates from 15 June — then cancelled it on the day, said the move was no longer happening, and that the approach was being reworked. Every tool built on the announced assumption spent a month planning for something that never arrived. A markdown file doesn't have that failure mode.
+That distinction earned its keep in June 2026. Anthropic announced in mid-May that Agent SDK and `claude -p` usage would move to a separate monthly credit from 15 June — then, on 15 June, paused the change on the same help page, saying nothing had changed and the credit wasn't available. Every tool built on the announced assumption spent a month planning for something that never arrived. A markdown file doesn't have that failure mode.
 
-*(Sourcing note, checked 2026-07-31: the reversal is reported consistently across independent outlets, but I haven't read a primary Anthropic notice for it. Treat the dates as secondary-sourced, and check before repeating them.)*
+*(Primary source: Anthropic's help article ["Use the Claude Agent SDK with your Claude plan"](https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan), which carries both the original announcement and the 15 June pause notice. Checked 2026-08-26. The word on the page is "pausing", not cancelled.)*
 
 **About every "verified" date in this repo.** They mean I checked the source on that date, working with an AI assistant, in one session. That's internal review — not an audit, not independent verification, and nobody outside this project has confirmed any of it. Each claim is logged with its evidence tier and its limits in [`commercial/EVIDENCE_LEDGER.yaml`](commercial/EVIDENCE_LEDGER.yaml), including the three currently marked **quarantined**, which means unsourced and not fit to state as fact.
 
@@ -275,6 +319,7 @@ And this repo, which is the methodology plus its own governance:
     ├── index.html          public dashboard (single file, no build step)
     ├── tracker.html        build tracker (reads data/tracker.json)
     ├── data/               tracker.json, variants.json — edit data, not markup
+    ├── llms.txt, robots.txt, sitemap.xml   for search engines. optional, no effect on the method
     ├── RESEARCH_LOG.md     sector observations, with verification dates
     ├── POSITIONING.md      the competitive delta + eight rehearsed objections
     ├── NAMING.md           three name collisions and the rename procedure
