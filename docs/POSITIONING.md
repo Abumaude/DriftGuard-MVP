@@ -87,7 +87,7 @@ They will absorb part of it, and they should. A provider's memory tool is genuin
 
 ### "You have twenty variants and zero shipped products. Why should I trust this?"
 
-You should not, on that basis, and the README says so in the first line — I built twenty things with AI and shipped none of them. The methodology is the thing I built to stop doing that, and this repository is the first artefact where I applied it to myself: `ANCHOR.md` at the root is DriftGuard's own anchor, published with its front gate visibly closed — there is no named person in it yet, and its own constraint 1 therefore bars any build action past Step 0. The honest status is alpha, unproven, and free. Judge it on whether the files are useful, and check back in a quarter to see whether the ledger shows shipping.
+You should not, on that basis, and the README says so in the first line — I built twenty things with AI and shipped none of them. The methodology is the thing I built to stop doing that, and this repository is the first artefact where I applied it to myself: `ANCHOR.md` at the root is DriftGuard's own anchor, and its front gate names me rather than a user — I built it for my own use, so the signal is self-generated, which fails the anchor's own third slot test and is recorded as that failure in its Section 9.3 rather than waived. The honest status is alpha, unproven by anyone but me, and free. Judge it on whether the files are useful, and check back in a quarter to see whether the ledger shows shipping.
 
 ### "The name is taken. Three times."
 

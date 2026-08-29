@@ -117,9 +117,11 @@ unpublished.
 You shouldn't, on that basis, and the README opens with it. The methodology is
 what was built to stop doing that, and this repository is the first artefact
 where it is applied to itself — the anchor at the root is DriftGuard's own, and
-its front gate is currently published **closed**, because no named person has
-been filled in yet. That is either the most convincing thing here or the least,
-depending on your temperament. Check back in a quarter and read the ledger.
+its front gate names its **author** rather than a user, because this was built
+for my own use. The signal is therefore self-generated, which fails the anchor's
+own third test and is recorded as such in its Section 9.3. That is either the
+most convincing thing here or the least, depending on your temperament. Check
+back in a quarter and read the ledger.
 
 **What is the fastest way to help?**
 

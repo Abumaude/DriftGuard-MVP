@@ -180,7 +180,9 @@ fi
 # ---------------------------------------------------------------------------
 head_ "Front gate"
 
-GATECOUNT=$(grep -c 'NAMED PERSON — OPERATOR MUST FILL' ANCHOR.md 2>/dev/null || echo 0)
+# grep -c prints "0" *and* exits 1 when there are no matches, so a `|| echo 0`
+# fallback appends a second zero and the count matches neither branch below.
+GATECOUNT=$(grep -c 'NAMED PERSON — OPERATOR MUST FILL' ANCHOR.md 2>/dev/null) || GATECOUNT=0
 if [[ "$GATECOUNT" == "1" ]]; then
   pass "front gate is closed and intact (publishing this way is deliberate)"
 elif [[ "$GATECOUNT" == "0" ]]; then

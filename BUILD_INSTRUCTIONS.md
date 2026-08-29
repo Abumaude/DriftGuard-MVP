@@ -19,7 +19,7 @@ This file controls how the launch executes. It references `ANCHOR.md` by section
 
 ## How this file works
 
-**Two gate steps run before everything, in order.** Step 0 asks whether this should exist at all: no build action begins until the session card is filled and `ANCHOR.md` Section 1.0 holds a real name. That gate is currently closed, and it is not a formality — it is the one rule whose violation caused the failure this project exists to correct.
+**Two gate steps run before everything, in order.** Step 0 asks whether this should exist at all: no build action begins until the session card is filled and `ANCHOR.md` Section 1.0 holds a real name. That gate is now open — it names the operator, and the limitation that follows is recorded in `ANCHOR.md` Section 9.3 — and it is not a formality — it is the one rule whose violation caused the failure this project exists to correct.
 
 Step 0.5 asks whether the design is complete: the whole process gets drawn and every actor's journey walked before any build work. Added by `RULING_closed-loop-gate-v1` (2026-08-22), recorded as `ANCHOR.md` Section 8.
 
@@ -112,8 +112,9 @@ Step 0 runs once, before everything. The rest are grouped into three release ban
 
 ---
 
-### Step 0: Fill the session card (front gate)
+### Step 0: Fill the session card (front gate) — COMPLETE
 
+**Status:** Complete, 2026-08-22. The gate names the operator; the self-generated signal and its cost are recorded in `ANCHOR.md` Section 9.
 **Model:** Opus-class
 **Read from ANCHOR:** Section 1, especially 1.0
 **Dependencies:** none — this is the precondition for the whole build

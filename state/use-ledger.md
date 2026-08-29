@@ -98,6 +98,14 @@ the mechanism, not a locked door.
              byte-identical to the bundle before anything was copied. For the
              next repo: don't publish via browser upload, or check the dotfile
              set and file modes immediately after.
+
+2026-08-22 | step-00 GATE OPENED | Front gate filled with the operator as
+             named person. Result slot: resuming my own projects cold without
+             re-explaining. Signal: resume a project untouched for a month and
+             complete the next step without re-briefing. | OPEN. Third slot
+             test fails - signal is self-generated - recorded in ANCHOR
+             Section 9.3 rather than waived. Band stays Prototype; constraint
+             6 bars a transition without an external signal.
 ```
 
 ---

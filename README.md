@@ -14,7 +14,7 @@ That's it. It's markdown in your repo. Any AI can read it — Claude Code, Curso
 
 > **On the name.** DriftGuard is provisional. Three unrelated products already use it, one of which holds the `DriftGuard` GitHub org. A rename is planned and costs one find-and-replace. See [`docs/NAMING.md`](docs/NAMING.md).
 
-> **Status: alpha.** Unproven, free, MIT. Its own front gate is currently **closed** - see [the gate is closed](#the-gate-is-closed), which is either the most convincing thing here or the least, depending on your temperament.
+> **Status: alpha.** Unproven, free, MIT. Its own front gate names its author rather than a user - see [the gate names me](#the-gate-names-me), which is either the most convincing thing here or the least, depending on your temperament.
 
 Free, MIT, no email capture, no account, no gated download, no upsell, and no analytics in the repo. Before you spend time on it, read [**what it does not do and who should not use it**](HONEST_BOX.md) — including the case where you should use a competitor instead.
 
@@ -146,15 +146,19 @@ It has already caught this project drifting. Early on I let an AI write chat lin
 
 ---
 
-## the gate is closed
+## the gate names me
 
-This repo governs itself with its own methodology, which means publishing the parts that aren't finished.
+This repo governs itself with its own methodology, which means publishing the parts that don't flatter it.
 
-[`ANCHOR.md`](ANCHOR.md) Section 1.0 requires a named person — a real human you can message this afternoon — before any build action is permitted. That slot is empty. So the gate is closed, almost everything on the [tracker](https://abumaude.github.io/DriftGuard-MVP/tracker.html) is blocked behind it, and the launch sequence formally cannot proceed. The tracker renders those counts from committed data; this page deliberately does not restate them, because a hand-typed number goes stale the first time an item is added and nobody notices.
+[`ANCHOR.md`](ANCHOR.md) Section 1.0 requires a named person before any build action is permitted - a real human, reachable this afternoon, whose life changes if this works. For most projects that's a stranger. For this one it's me. I built DriftGuard for my own use and published it in case it's useful to you, and naming a stranger in the slot would have invented an obligation to somebody who never asked for anything.
 
-I published it that way on purpose. A governance methodology that quietly waives its own front gate has lost the argument before anyone reads the README, and a closed gate demonstrates the mechanism better than any paragraph describing it could.
+So the gate is open and it names its author, which fails one of its own three tests: the signal is meant to come from someone other than the operator. It doesn't. That failure is written down in [`ANCHOR.md`](ANCHOR.md) Section 9.3 rather than smoothed over, because a self-named gate can show the method works for the person who wrote it and proves nothing at all about whether it works for you.
 
-It's also the rule I most want to bend, which is roughly how you know it's the right rule. "Alpha testers" would let me through. "Solo founders building with AI" would let me through. Neither can reject me, and that's the whole point of the constraint — a demographic can't say no to your face and a person can.
+What stops it being worthless is that it's falsifiable and dated. The claim is a specific behaviour - resume a project I haven't touched in a month and complete the next step without re-briefing - and the [ledger](state/use-ledger.md) records the gap, so I can't decide afterwards that it went fine.
+
+It's also the rule I most wanted to bend, which is roughly how you know it's the right one. "Alpha testers" would have let me through. "Solo founders building with AI" would have let me through. Neither can reject me, and that's the whole point of the constraint - a demographic can't say no to your face and a person can. Naming myself narrows that rather than dodging it: the person who can say no is the one who has to open this repo in November and find it still works.
+
+The band stays Prototype no matter how much I use it. Constraint 6 only permits a band transition on a signal from outside, so this converts to an external gate the day somebody else fills in an anchor and comes back with a specific complaint. Until then nothing here has been tested by anyone but me.
 
 ---
 
@@ -299,7 +303,7 @@ And this repo, which is the methodology plus its own governance:
 ```
 .
 ├── README.md               this file — the whole marketing surface
-├── ANCHOR.md               DriftGuard's own anchor. gate currently CLOSED.
+├── ANCHOR.md               DriftGuard's own anchor. gate OPEN, names the author.
 ├── BUILD_INSTRUCTIONS.md   the launch sequence, nine steps
 ├── AGENTS.md               instructions for AI agents working in here
 ├── CLAUDE.md               same, for Claude Code — it reads this automatically
@@ -336,7 +340,7 @@ Every term above that isn't obvious is in [`GLOSSARY.md`](GLOSSARY.md), one line
 
 ## the variant library
 
-A variant is the same methodology with an anchor shaped for a specific domain. **None of these repositories are live yet.** Each exists as a complete anchor-and-build pair; they get published in Step 4, after the gate clears. A link to an empty repo costs more credibility than a missing row.
+A variant is the same methodology with an anchor shaped for a specific domain. **None of these repositories are live yet.** Each exists as a complete anchor-and-build pair; they get published in Step 4. A link to an empty repo costs more credibility than a missing row.
 
 | variant | governs | pair | repo |
 |---|---|---|---|
@@ -359,7 +363,7 @@ First, I want it to be **usable by someone who doesn't know what a repository is
 
 Second, I want it to stay **small enough to read in one sitting**. The anchor template is one file. The build template is one file. The dashboards are one file each, with no build step, no bundler, no dependency, and no network call — they work if you double-click them. If a change adds a package manager to make something 5% nicer, I'll turn it down, because the moment this needs installing it becomes a harness and loses the only durable advantage it has.
 
-Third, I want it to be **honest about what it isn't**. This README tells you to use a competitor for the most common use case. It publishes its own gate as closed. It flags two rows of its own comparison table as unverified. None of that is modesty — it's that a governance tool which oversells itself is refuting its own thesis in public.
+Third, I want it to be **honest about what it isn't**. This README tells you to use a competitor for the most common use case. It publishes a front gate that names its own author, and says why that's the weak version. It flags two rows of its own comparison table as unverified. None of that is modesty — it's that a governance tool which oversells itself is refuting its own thesis in public.
 
 What I'll turn down: anything requiring an API key, server, quota, or account to use the methodology. Telemetry of any kind. A build step for the dashboards. A separate marketing site — this README is the marketing surface. New variants while unshipped ones exist, which is the architect's-trap protection and the rule I break most often.
 

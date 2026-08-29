@@ -52,7 +52,7 @@ The things a fair competitor would raise, listed because they'd be right to.
 
 - **It is unproven.** Nobody outside the author has completed a project using it. Not one person. The evidence supports the *problem* being real — two frontier labs, cited in the README — and supports nothing at all about this being the right solution.
 - **The templates are written in developer register**, which directly contradicts the stated first market of non-technical builders. This is named openly in the project's own anchor as the known weak point, and it isn't fixed.
-- **The project's own front gate is closed.** It requires a named person before any build action, and that slot is empty, so DriftGuard has not itself passed the bar it sets for everyone else. Read that either as unusual honesty or as a project that hasn't started. Both readings are fair.
+- **The project's own front gate names its author.** It requires a named person before any build action, and that person is the author, so the signal it waits on is self-generated — which fails the anchor's own third test, recorded in its Section 9.3 rather than waived. No external user has yet tested the method. Read that either as unusual honesty or as a project that hasn't started. Both readings are fair.
 - **The name is provisional and will change.** Three unrelated products already use it, one holding the GitHub org.
 - **Two rows of the competitive comparison table are unsourced**, marked as such in place, and not yet fixed.
 - **The time-to-value figure was withdrawn.** An earlier version said twenty minutes. That number was an estimate presented as a measurement, so it's gone until somebody actually times a real user.
